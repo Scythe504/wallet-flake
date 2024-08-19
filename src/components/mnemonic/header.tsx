@@ -3,6 +3,6 @@ export const MnemonicHeader = ()=> {
         <h1 className="text-center sm:text-4xl text-2xl font-semibold">
             Secret Recovery Phase
         </h1>
-        <p className=" text-white/60 text-xs md:text-base">Save these words in a safe place.</p>
+        <p className="text-black/65 dark:text-white/65 text-xs md:text-base">Save these words in a safe place.</p>
     </div>
 }
