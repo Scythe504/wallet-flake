@@ -7,7 +7,7 @@ export const MnemonicFooter = ({Content}: {
 }) => {
     const [isChecked, setIsChecked] = useState(false);
     
-    return <div className="flex flex-col gap-2">
+    return <div className="flex flex-col gap-5">
         <div className="flex flex-row gap-2 items-center justify-center">
             <Checkbox className="size-5" onClick={()=>!isChecked}/>
             <p className="text-black/65 dark:text-white/65 text-sm md:text-base ">{Content}</p>
