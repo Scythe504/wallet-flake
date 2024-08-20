@@ -10,20 +10,25 @@ import { Accounts } from "@/components/accounts/account"
 export const OnboardingNavbar = ({
     children
 }: {
-    children : React.JSX.Element
+    children?: React.JSX.Element
 }) => {
     const { theme } = useTheme();
     return <nav className="sm:p-6 absolute top-0 shadow-xl shadow-zinc-800/30 w-full sm:px-20 px-8 p-6">
         <div className="flex flex-row justify-between items-center">
             <div className="font-semibold sm:text-3xl text-xl">
                 <a className="flex items-center gap-2">
-                    <Image src={theme === "dark" || theme === undefined ? flake_light : flake_dark} alt="logo" height={30} width={40} />
+                    <Image src={(
+                        theme === "dark" ||
+                        theme === undefined ||
+                        theme === "system") ? flake_light : flake_dark}
+                        alt="logo" height={30} width={40}
+                    />
                     <p>Flake</p>
                 </a>
             </div>
             {children}
             <ModeToggle />
         </div>
-        
+
     </nav>
 }

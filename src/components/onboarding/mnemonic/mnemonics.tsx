@@ -1,5 +1,5 @@
 'use client'
-import { MnemonicFooter } from "./footer"
+import { MnemonicFooter } from "../footer"
 import { MnemonicHeader } from "./header"
 import { Phrases } from "./phrases"
 

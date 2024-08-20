@@ -1,6 +1,6 @@
 'use client'
 import { Input } from "@/components/ui/input"
-import { MnemonicFooter } from "../mnemonic/footer"
+import { MnemonicFooter } from "../footer"
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 

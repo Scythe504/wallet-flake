@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Button } from "../../ui/button"
-import { Checkbox } from "../../ui/checkbox"
+import { Button } from "../ui/button"
+import { Checkbox } from "../ui/checkbox"
 
 export const MnemonicFooter = ({Content}: {
     Content: JSX.Element

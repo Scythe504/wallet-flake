@@ -17,17 +17,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <body className={inter.className}>
-                    <OnboardingNavbar children={<></>} />
-                    {children}
-                </body>
-            </ThemeProvider>
+            <body className={inter.className}>
+                <OnboardingNavbar />
+                {children}
+            </body>
         </html>
     );
 }
