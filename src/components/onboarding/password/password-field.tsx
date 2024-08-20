@@ -18,7 +18,7 @@ export const PasswordField = () => {
             <span onClick={() => setSecInput(!secondInput)}>{secondInput ? <EyeOff /> : <Eye />}</span>
         </div>
         <div className="translate-y-10">
-            <MnemonicFooter Content="I agree to the terms and service" />
+            <MnemonicFooter Content={<span>I agree to the <a className="text-blue-500" href="/terms">Terms and Services</a></span>} />
         </div>
     </div>
 }

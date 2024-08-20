@@ -3,7 +3,7 @@ import { Button } from "../../ui/button"
 import { Checkbox } from "../../ui/checkbox"
 
 export const MnemonicFooter = ({Content}: {
-    Content: string
+    Content: JSX.Element
 }) => {
     const [isChecked, setIsChecked] = useState(false);
     
