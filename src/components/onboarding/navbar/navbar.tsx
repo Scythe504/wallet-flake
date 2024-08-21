@@ -4,8 +4,7 @@ import flake_light from '../../../../public/fragments-light.svg'
 import flake_dark from '../../../../public/fragments.svg'
 import { ModeToggle } from "@/components/ui/mode-toggle"
 import { useTheme } from "next-themes"
-import React, { useEffect } from "react"
-import { Accounts } from "@/components/accounts/account"
+import React from "react"
 
 export const OnboardingNavbar = ({
     children
