@@ -49,7 +49,7 @@ export const PhraseInput = () => {
     }
 
     const handleSubmit = () => {
-        if (phrase.every(word => bip39.wordlists.english.includes(word))) {
+        if (bip39.validateMnemonic(phrase.join(" "))) {
             alert("Wallet imported successfully");
             // Here you would typically call a function to actually import the wallet
         } else {
