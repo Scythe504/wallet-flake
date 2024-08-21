@@ -4,11 +4,14 @@ import { Input } from "../ui/input"
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import * as bip39 from "bip39";
+import { WalletManager } from "@/utils/wallet";
+import { useRouter } from "next/navigation";
 
 export const PhraseInput = () => {
     const [phraseLength, setPhraseLength] = useState<12 | 24>(12);
     const [phrase, setPhrase] = useState<string[]>(new Array(12).fill(""));
-    const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const router = useRouter();
 
     const toggle = () => {
         const newLength = phraseLength === 12 ? 24 : 12;
@@ -50,8 +53,10 @@ export const PhraseInput = () => {
 
     const handleSubmit = () => {
         if (bip39.validateMnemonic(phrase.join(" "))) {
-            alert("Wallet imported successfully");
             // Here you would typically call a function to actually import the wallet
+            const wallet: WalletManager = WalletManager.getInstance(phrase.join(" "));
+            wallet.addWallet(`Account ${wallet.wallet_counts}`, phrase.join(" "));
+            router.push(`/importing/${3}`)
         } else {
             alert("Invalid phrase. Please check your words and try again.");
         }

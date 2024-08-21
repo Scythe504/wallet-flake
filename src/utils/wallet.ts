@@ -21,25 +21,27 @@ enum Blockchain {
     POLYGON = "MATIC"
 }
 
-export class Wallet {
-    private static instance: Wallet;
+export class WalletManager {
+    private static instance: WalletManager;
     private walletMap: Map<string, { [name: string]: Accounts[] }>;
     // private password: string;
+    public wallet_counts: number;
 
     private constructor(phrase: string) {
         this.walletMap = new Map<string, { [name: string]: Accounts[] }>();
+        this.wallet_counts = 0;
     }
 
     static getInstance(phrase: string) {
-        if (Wallet.instance) {
-            return Wallet.instance;
+        if (WalletManager.instance) {
+            return WalletManager.instance;
         }
-
-        Wallet.instance = new Wallet(phrase);
-        return Wallet.instance;
+        
+        WalletManager.instance = new WalletManager(phrase);
+        return WalletManager.instance;
     }
 
-    public deriveSol(index: number, phrase: string) {
+    private deriveSol(index: number, phrase: string) {
         const seed = mnemonicToSeedSync(phrase);
 
         const pathOption = solanaBlockchainConfig.DerivationPathOptions[0].pattern
@@ -53,7 +55,7 @@ export class Wallet {
         return [publicKey, privKey];
     }
 
-    public deriveEth(index: number, phrase: string) {
+    private deriveEth(index: number, phrase: string) {
         const hdNode = HDNodeWallet.fromPhrase(phrase, "", ethereumBlockchainConfig.DerivationPathOptions[5].pattern.replace('x', index.toString()));
         return [hdNode.address, hdNode.privateKey];
     }
