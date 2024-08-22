@@ -56,7 +56,7 @@ export const PhraseInput = () => {
     const handleSubmit = () => {
         if (bip39.validateMnemonic(phrase.join(" "))) {
             // Here you would typically call a function to actually import the wallet
-            window.sessionStorage.setItem('currentPhrase', phrase.join(' '));
+            window.localStorage.setItem('currentPhrase', phrase.join(' '));
             router.push(`/importing/${3}`)
         } else {
             toast({ description: "Invalid phrase. Please check your words and try again." });

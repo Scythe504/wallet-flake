@@ -15,7 +15,7 @@ export const Phrases = () => {
     }, [])
     // const [seed, setSeed] = useState<Buffer>();
     // setSeed(mnemonicToSeedSync(mnemonic));
-    window.sessionStorage.setItem('currentPhrase', mnemonic);
+    window.localStorage.setItem('currentPhrase', mnemonic);
     const copyToClipboard = () => {
         navigator.clipboard.writeText(mnemonic);
         toast({ description: "Copied To Clipboard" });

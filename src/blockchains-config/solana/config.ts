@@ -2,7 +2,8 @@ import { PublicKey } from "@solana/web3.js";
 import { SolanaExplorer } from "./explorer";
 import { SolanaCluster } from "./cluster";
 
-const remoteLogoUri = "";
+const remoteLogoUri =
+  "https://s3.us-east-1.amazonaws.com/app-assets.xnfts.dev/images/useBlockchainLogo/solana.png";
 const bip44CoinType = 501;
 
 export const solanaBlockchainConfig = {
@@ -53,7 +54,7 @@ export const solanaBlockchainConfig = {
     },
     logoUri: remoteLogoUri,
     bip44CoinType: bip44CoinType,
-    localLogoUri: "./solana.png",
+    localLogoUri: "./solana.svg",
     requiresChainId: false,
     RpcConnectionUrls: {
         MAINNET: {

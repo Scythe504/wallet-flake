@@ -17,7 +17,7 @@ export const PasswordField = () => {
     const handleClick = () => {
         // todo
         if (firstVal === secondVal && firstVal.length >= 6) {
-            window.sessionStorage.setItem('currentPassword', firstVal);
+            window.localStorage.setItem('currentPassword', firstVal);
             router.push('/onboarding/2')
         } else {
             toast({

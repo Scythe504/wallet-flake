@@ -40,8 +40,8 @@ export default function Importing() {
     }, [currentStep]);
 
     useEffect(() => {
-        const currentPhrase = sessionStorage.getItem('currentPhrase');
-        const importPassword = sessionStorage.getItem('currentPassword');
+        const currentPhrase = window.localStorage.getItem('currentPhrase');
+        const importPassword = window.localStorage.getItem('currentPassword');
 
         if (currentStep > 1 && !currentPhrase) {
             router.push('/importing/1');

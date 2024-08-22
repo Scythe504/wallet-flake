@@ -6,7 +6,6 @@ import nacl from 'tweetnacl';
 import { encodeBase58 } from 'ethers';
 import { ethereumBlockchainConfig } from '@/blockchains-config/eth/config';
 import { HDNodeWallet } from 'ethers';
-import bcrypt from 'bcryptjs'
 
 export type Accounts = {
     label: Blockchain,
@@ -17,7 +16,7 @@ export type Accounts = {
 
 export type wallet_map = Map<string, { [name: string]: Accounts[] }>
 
-enum Blockchain {
+export enum Blockchain {
     SOL = "SOL",
     ETH = "ETH",
     BTC = "BTC",
@@ -131,5 +130,56 @@ export class WalletManager {
             console.error("Error adding wallet:", e);
             return null;
         }
+    }
+
+    public getWallet(): Accounts[] | undefined {
+        const currentAccount = window.localStorage.getItem('currentAccount');
+        if (!currentAccount) {
+            console.error('No current account found in session storage');
+            return undefined;
+        }
+
+        const currentPhrase = window.localStorage.getItem('currentPhrase');
+        if (!currentPhrase) {
+            console.error('No current phrase found in session storage');
+            return undefined;
+        }
+
+        const storageData = window.localStorage.getItem('0');
+        if (!storageData) {
+            console.error('No data found in local storage');
+            return undefined;
+        }
+
+        const data: { [phrase: string]: { [accountName: string]: Accounts[] } } = JSON.parse(storageData);
+
+        const phraseData = data[currentPhrase];
+        if (!phraseData) {
+            console.error('Current phrase not found in stored data');
+            return undefined;
+        }
+
+        const wallets = phraseData[currentAccount];
+        if (!wallets) {
+            console.error('Current account not found in stored data for the current phrase');
+            return undefined;
+        }
+        return wallets;
+    }
+
+    public getAllPhraseWallets() {
+        const phraseMap: { [phrase: string]: { [name: string]: Accounts[] } } = JSON.parse(window.localStorage.getItem('0')!);
+        if (!phraseMap) {
+            return undefined;
+        }
+        let ret_wallets: { [name: string]: Accounts[] } = { "": [] };
+        for (let phrase in phraseMap) {
+            const names = phraseMap[phrase];
+            for (let name in names) {
+                ret_wallets[name].push(...names[name]);
+            }
+        }
+
+        return ret_wallets;
     }
 }

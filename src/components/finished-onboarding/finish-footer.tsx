@@ -14,8 +14,8 @@ export const FinishedFooter = () => {
     useEffect(() => {
         const initializeWallet = async () => {
             try {
-                const password = window.sessionStorage.getItem('currentPassword');
-                const phrase = window.sessionStorage.getItem('currentPhrase');
+                const password = window.localStorage.getItem('currentPassword');
+                const phrase = window.localStorage.getItem('currentPhrase');
 
                 if (!password || !phrase) {
                     setMessage("Failed");
@@ -51,7 +51,6 @@ export const FinishedFooter = () => {
     const router = useRouter()
 
     const handleFinish = () => {
-        sessionStorage.removeItem('currentPhrase');
         router.push('/dashboard')
     }
 

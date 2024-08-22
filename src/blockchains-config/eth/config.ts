@@ -82,7 +82,7 @@ export const ethereumBlockchainConfig = {
     logoUri:
       "https://s3.us-east-1.amazonaws.com/app-assets.xnfts.dev/images/useBlockchainLogo/ethereum.png",
     bip44CoinType: 60,
-    localLogoUri: "./ethereum.png",
+    localLogoUri: "./ethereum.svg",
     requiresChainId: true,
     RpcConnectionUrls: {
       MAINNET: {
