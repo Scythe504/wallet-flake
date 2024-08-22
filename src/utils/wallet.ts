@@ -6,6 +6,7 @@ import nacl from 'tweetnacl';
 import { encodeBase58 } from 'ethers';
 import { ethereumBlockchainConfig } from '@/blockchains-config/eth/config';
 import { HDNodeWallet } from 'ethers';
+import bcrypt from 'bcryptjs'
 
 type Accounts = {
     label: Blockchain,
@@ -13,6 +14,8 @@ type Accounts = {
     publicKey: string,
     privateKey: string,
 }
+
+export type wallet_map = Map<string, { [name: string]: Accounts[] }>
 
 enum Blockchain {
     SOL = "SOL",
@@ -23,21 +26,22 @@ enum Blockchain {
 
 export class WalletManager {
     private static instance: WalletManager;
-    private walletMap: Map<string, { [name: string]: Accounts[] }>;
-    // private password: string;
+    public walletMap: wallet_map;
+    private static password: string;
     public wallet_counts: number;
 
-    private constructor(phrase: string) {
+    private constructor(password: string) {
         this.walletMap = new Map<string, { [name: string]: Accounts[] }>();
+        WalletManager.password = bcrypt.hashSync(password, 12);
         this.wallet_counts = 0;
     }
 
-    static getInstance(phrase: string) {
+    static getInstance(password: string) {
         if (WalletManager.instance) {
             return WalletManager.instance;
         }
-        
-        WalletManager.instance = new WalletManager(phrase);
+
+        WalletManager.instance = new WalletManager(password);
         return WalletManager.instance;
     }
 
@@ -59,16 +63,25 @@ export class WalletManager {
         const hdNode = HDNodeWallet.fromPhrase(phrase, "", ethereumBlockchainConfig.DerivationPathOptions[5].pattern.replace('x', index.toString()));
         return [hdNode.address, hdNode.privateKey];
     }
+    public addWallet(name: string, phrase: string): boolean {
+        try {
+            // Retrieve existing data from localStorage
+            let existingData: { [phrase: string]: { [name: string]: Accounts[] } };
+            try {
+                const storedData = window.localStorage.getItem('0');
+                existingData = storedData ? JSON.parse(storedData) : {};
+            } catch (parseError) {
+                console.warn("Failed to parse localStorage, using empty object:", parseError);
+                existingData = {};
+            }
+            // Initialize wallet data for this phrase if it doesn't exist
+            if (!existingData[phrase]) {
+                existingData[phrase] = {};
+            }
 
-    public addWallet(name: string, phrase: string) {
-        let values_len = this.walletMap.get(phrase)![name].length;
-        if (values_len === undefined) {
-            values_len = 0;
-        } else {
-            values_len++;
-        }
-        const walletObject = {
-            [name]: [
+            let values_len = Object.keys(existingData[phrase]).length || 0;
+
+            const newAccount = [
                 {
                     label: Blockchain.SOL,
                     path: solanaBlockchainConfig.DerivationPathOptions[0].pattern.replace('x', values_len.toString()),
@@ -87,8 +100,35 @@ export class WalletManager {
                     publicKey: this.deriveEth(values_len, phrase)[0],
                     privateKey: this.deriveEth(values_len, phrase)[1],
                 },
-            ]
-        };
-        this.walletMap.set(phrase, walletObject);
+            ];
+
+            // Add new account to existing data
+            if (!existingData[phrase][name]) {
+                existingData[phrase][name] = [];
+            }
+            existingData[phrase][name].push(...newAccount);
+
+            // Update wallet_counts
+            this.wallet_counts += 3;
+
+            // Convert back to JSON and store in localStorage
+            const updatedDataJson = JSON.stringify(existingData);
+
+            window.localStorage.setItem(WalletManager.password, updatedDataJson);
+
+            const storedData = window.localStorage.getItem(WalletManager.password);
+
+            if (storedData !== updatedDataJson) {
+                console.warn("Stored data doesn't match what we tried to store!");
+            }
+
+            // Update the instance walletMap
+            this.walletMap = new Map(Object.entries(existingData));
+
+            return true;
+        } catch (e) {
+            console.error("Error adding wallet:", e);
+            return false;
+        }
     }
 }

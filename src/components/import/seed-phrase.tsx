@@ -54,9 +54,9 @@ export const PhraseInput = () => {
     const handleSubmit = () => {
         if (bip39.validateMnemonic(phrase.join(" "))) {
             // Here you would typically call a function to actually import the wallet
-            const wallet: WalletManager = WalletManager.getInstance(phrase.join(" "));
+            const wallet: WalletManager = WalletManager.getInstance("Scythe_504");
             wallet.addWallet(`Account ${wallet.wallet_counts}`, phrase.join(" "));
-            router.push(`/importing/${3}`)
+            // router.push(`/importing/${3}`)
         } else {
             alert("Invalid phrase. Please check your words and try again.");
         }

@@ -1,4 +1,5 @@
 'use client'
+import { FinishedSteps } from "@/components/finished-onboarding/finish";
 import { Mnemonics } from "@/components/onboarding/mnemonic/mnemonics";
 import { CreatePassword } from "@/components/onboarding/password/create-password";
 import { Circle } from "lucide-react";
@@ -43,6 +44,7 @@ export default function Onboarding() {
             {/* Render different components based on currentStep */}
             {currentStep === 1 && <CreatePassword    />}
             {currentStep === 2 && <Mnemonics />}
+            {currentStep === 3 && <FinishedSteps/>}
             {/* Add other step components here */}
             <div className="rounded-t-lg sm:min-w-[500px] p-3 px-5 translate-y-2 flex flex-row items-center justify-center gap-2">
                 {progress}

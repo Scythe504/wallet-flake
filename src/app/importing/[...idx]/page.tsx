@@ -1,11 +1,12 @@
 'use client'
+import { FinishedSteps } from "@/components/finished-onboarding/finish";
 import { ImportWallet } from "@/components/import/import-wallet";
 import { CreatePassword } from "@/components/onboarding/password/create-password";
 import { Circle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const TOTAL_STEPS = 3; // Adjust this to the total number of onboarding steps
+const TOTAL_STEPS = 3;
 
 export default function Importing() {
     const path = usePathname();
@@ -37,14 +38,26 @@ export default function Importing() {
         });
         setProgress(newProgress);
     }, [currentStep]);
+
+    useEffect(() => {
+        const currentPhrase = sessionStorage.getItem('currentPhrase');
+        const importPassword = sessionStorage.getItem('currentPassword');
+
+        if (currentStep > 1 && !currentPhrase) {
+            router.push('/importing/1');
+        } else if (currentStep > 2 && !importPassword) {
+            router.push('/importing/2');
+        }
+    }, [currentStep, router]);
     
     return (
         <div className="p-5 min-h-screen flex flex-col items-center justify-center">
-            {/* Render different components based on currentStep */}
-            {currentStep === 1 && <CreatePassword />}
-            {currentStep === 2 && <ImportWallet  />}
-            {/* {currentStep === 3 && <FinishedSteps/>} */}
-            {/* Add other step components here */}
+            {currentStep === 1 && <ImportWallet />}
+            {currentStep === 2 && <CreatePassword />}
+            {currentStep === 3 && (
+                <FinishedSteps
+                />
+            )}
             <div className="rounded-t-lg sm:min-w-[500px] p-3 px-5 translate-y-2 flex flex-row items-center justify-center gap-2">
                 {progress}
             </div>
