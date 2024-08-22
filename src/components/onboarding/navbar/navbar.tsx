@@ -9,7 +9,7 @@ import React from "react"
 export const OnboardingNavbar = ({
     children
 }: {
-    children?: React.JSX.Element
+    children?: Readonly<React.ReactNode>
 }) => {
     const { theme } = useTheme();
     return <nav className="sm:p-6 absolute top-0 left-0 z-10 shadow-xl shadow-zinc-800/30 w-full sm:px-20 px-8 p-6 h-24">

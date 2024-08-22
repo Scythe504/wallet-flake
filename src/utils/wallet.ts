@@ -8,7 +8,7 @@ import { ethereumBlockchainConfig } from '@/blockchains-config/eth/config';
 import { HDNodeWallet } from 'ethers';
 import bcrypt from 'bcryptjs'
 
-type Accounts = {
+export type Accounts = {
     label: Blockchain,
     path: string,
     publicKey: string,
@@ -27,12 +27,10 @@ enum Blockchain {
 export class WalletManager {
     private static instance: WalletManager;
     public walletMap: wallet_map;
-    private static password: string;
     public wallet_counts: number;
 
     private constructor(password: string) {
         this.walletMap = new Map<string, { [name: string]: Accounts[] }>();
-        WalletManager.password = bcrypt.hashSync(password, 12);
         this.wallet_counts = 0;
     }
 
@@ -63,7 +61,7 @@ export class WalletManager {
         const hdNode = HDNodeWallet.fromPhrase(phrase, "", ethereumBlockchainConfig.DerivationPathOptions[5].pattern.replace('x', index.toString()));
         return [hdNode.address, hdNode.privateKey];
     }
-    public addWallet(name: string, phrase: string): boolean {
+    public addWallet(name: string, phrase: string): { [name: string]: Accounts[] } | null {
         try {
             // Retrieve existing data from localStorage
             let existingData: { [phrase: string]: { [name: string]: Accounts[] } };
@@ -114,9 +112,9 @@ export class WalletManager {
             // Convert back to JSON and store in localStorage
             const updatedDataJson = JSON.stringify(existingData);
 
-            window.localStorage.setItem(WalletManager.password, updatedDataJson);
+            window.localStorage.setItem('0', updatedDataJson);
 
-            const storedData = window.localStorage.getItem(WalletManager.password);
+            const storedData = window.localStorage.getItem('0');
 
             if (storedData !== updatedDataJson) {
                 console.warn("Stored data doesn't match what we tried to store!");
@@ -125,10 +123,13 @@ export class WalletManager {
             // Update the instance walletMap
             this.walletMap = new Map(Object.entries(existingData));
 
-            return true;
+            const ret_val = {
+                [name]: newAccount
+            }
+            return ret_val;
         } catch (e) {
             console.error("Error adding wallet:", e);
-            return false;
+            return null;
         }
     }
 }
