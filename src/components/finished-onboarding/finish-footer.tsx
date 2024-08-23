@@ -16,7 +16,7 @@ export const FinishedFooter = () => {
             try {
                 const password = window.localStorage.getItem('currentPassword');
                 const phrase = window.localStorage.getItem('currentPhrase');
-
+                
                 if (!password || !phrase) {
                     setMessage("Failed");
                     // router.push('/onboarding/1')

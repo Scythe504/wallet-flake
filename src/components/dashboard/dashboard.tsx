@@ -1,6 +1,8 @@
 import { Balance } from "./balance"
 import { GroupedActions } from "./action-group/grouped"
 import { Currencies } from "./currencies/currency"
+import { SideBar } from "./side-bar/side-bar"
+import { SideBarMask } from "./side-bar/side-bar-mask"
 
 export const Dashboard = ()=> {
     return <div className="w-full h-full space-y-8 pb-12">

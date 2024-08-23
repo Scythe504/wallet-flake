@@ -125,6 +125,7 @@ export class WalletManager {
             const ret_val = {
                 [name]: newAccount
             }
+            window.localStorage.setItem('currentAccount', name);
             return ret_val;
         } catch (e) {
             console.error("Error adding wallet:", e);
@@ -167,19 +168,14 @@ export class WalletManager {
         return wallets;
     }
 
-    public getAllPhraseWallets() {
-        const phraseMap: { [phrase: string]: { [name: string]: Accounts[] } } = JSON.parse(window.localStorage.getItem('0')!);
-        if (!phraseMap) {
-            return undefined;
-        }
-        let ret_wallets: { [name: string]: Accounts[] } = { "": [] };
-        for (let phrase in phraseMap) {
-            const names = phraseMap[phrase];
-            for (let name in names) {
-                ret_wallets[name].push(...names[name]);
-            }
+    public getPhraseValues() {
+        const phrases: { [phrase: string]: { [account_name: string]: Accounts[] } } = JSON.parse(window.localStorage.getItem('0')!);
+        const account_keys = [];
+        for (let phrase in phrases) {
+            let account = phrases[phrase];
+            account_keys.push(account);
         }
 
-        return ret_wallets;
+        return account_keys;
     }
 }
