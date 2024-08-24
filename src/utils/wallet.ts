@@ -149,7 +149,7 @@ export class WalletManager {
 
     public getWallet(): Accounts[] | undefined {
         const currentAccount: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
-        const { phrase, name, idx } = currentAccount;
+        const { phrase, name } = currentAccount;
         const storageObject: storageObject = JSON.parse(window.localStorage.getItem('0')!);
 
         const wallets: Accounts[] = storageObject[phrase][name];

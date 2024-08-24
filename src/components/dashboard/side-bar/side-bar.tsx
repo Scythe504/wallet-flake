@@ -1,37 +1,44 @@
 'use client'
-import { currentAccount, WalletManager } from "@/utils/wallet"
+import { currentAccount, WalletManager, Accounts } from "@/utils/wallet"
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
-import React from "react";
+import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { HoverRevealCard } from "./hover";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
 
 export const SideBar = () => {
     const router = useRouter();
     const { toast } = useToast();
     const pathName = usePathname();
     const password = window.localStorage.getItem('currentPassword');
+    
     if (!password) {
         router.push('/onboarding/1')
         return <></>;
     }
+    
     const wallet = WalletManager.getInstance(password);
     const account_wallets = wallet.getStorage();
+    
     if (!account_wallets) {
         router.push('/onboarding/1')
         return <></>
     }
 
     const handleClick = (currentAccount: currentAccount) => {
-        // wallet class todo
-        // window.localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
         wallet.changeAccount(currentAccount)
         const didUpdate: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
         if (didUpdate.name === currentAccount.name) {
             toast({
                 description: "Account switched"
             });
-
+            
             router.push('/dashboard');
             if (pathName.includes('dashboard')) {
                 window.location.reload();
@@ -41,11 +48,9 @@ export const SideBar = () => {
                 description: "Please Try Again"
             })
         }
-
     }
 
     const renderAccounts = () => {
-
         return Object.entries(account_wallets).map((account, idx) => {
             const phrase = account[0];
             return Object.entries(account[1]).map((acc_name, idx) => {
@@ -62,15 +67,27 @@ export const SideBar = () => {
                 } else {
                     new_str = str[0][0];
                 }
+                
+                const wallet = WalletManager.getInstance(password);
+                const accounts: Accounts[] = account_wallets[phrase][acc_name[0]]
+
                 return (
-                    <Button
-                        key={`${phrase}-${name}-${idx}`}
-                        className="h-[50px] w-[50px] rounded-full flex items-center justify-center"
-                        variant={"secondary"}
-                        onClick={() => handleClick(currentAccount)}
-                    >
-                        <span>{new_str.toUpperCase()}</span>
-                    </Button>
+                    <HoverCard key={`${phrase}-${name}-${idx}`}>
+                        <HoverCardTrigger
+                            asChild
+                        >
+                            <Button
+                                className="h-[50px] w-[50px] rounded-full flex items-center justify-center"
+                                variant={"secondary"}
+                                onClick={() => handleClick(currentAccount)}
+                            >
+                                <span>{new_str.toUpperCase()}</span>
+                            </Button>
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                            <HoverRevealCard accounts={accounts} />
+                        </HoverCardContent>
+                    </HoverCard>
                 );
             })
         })

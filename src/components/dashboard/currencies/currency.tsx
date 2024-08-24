@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { CurrencySkeleton } from "./skeleton";
 import { useRouter } from "next/navigation";
+import { toast, useToast } from "@/components/ui/use-toast";
 
 
 interface BalanceState {
@@ -39,6 +40,7 @@ interface Currency {
 
 
 export const Currencies: React.FC = () => {
+    const { toast } = useToast();
     const router = useRouter();
     const [balances, setBalances] = useState<BalanceState>({
         SOL: null,
@@ -72,7 +74,7 @@ export const Currencies: React.FC = () => {
 
                     let url = solanaBlockchainConfig.RpcConnectionUrls.DEVNET.url;
                     if (process.env.NODE_ENV === "development") {
-                        "http://127.0.0.1:8899"
+                        url = "http://127.0.0.1:8899";
                     }
                     const conn = new Connection(url);
                     const balance = await conn.getBalance(new PublicKey(publicAddress));
@@ -170,7 +172,14 @@ export const Currencies: React.FC = () => {
                             className="dark:bg-zinc-900/65 bg-zinc-300/65
                                 flex flex-row justify-between h-[110px] px-4 rounded-xl
                             "
-                            onClick={() => router.push(`/send-token?c=${account.label}`)}
+                            onClick={() => {
+                                if (account.label !== "SOL") {
+                                    toast({
+                                        description: "Currently Only Solana can be used to transfer SOL"
+                                    })
+                                }
+                                router.push(`/send-token?c=SOL`)
+                            }}
                         >
                             <div className="flex flex-row items-center justify-center gap-2">
                                 <div className="bg-black h-[75px] w-[75px] rounded-full flex justify-center">
