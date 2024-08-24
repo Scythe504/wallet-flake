@@ -1,11 +1,10 @@
 'use client'
-import { WalletManager } from "@/utils/wallet"
-import { LucideArrowLeft } from "lucide-react";
+import { currentAccount, WalletManager } from "@/utils/wallet"
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
 import React from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const SideBar = () => {
     const router = useRouter();
@@ -17,22 +16,24 @@ export const SideBar = () => {
         return <></>;
     }
     const wallet = WalletManager.getInstance(password);
-    const account_wallets = wallet.getPhraseValues();
+    const account_wallets = wallet.getStorage();
     if (!account_wallets) {
         router.push('/onboarding/1')
         return <></>
     }
 
-    const handleClick = (currentAccount: string) => {
-        window.localStorage.setItem('currentAccount', currentAccount);
-        const didUpdate = window.localStorage.getItem('currentAccount');
-        if (didUpdate === currentAccount) {
+    const handleClick = (currentAccount: currentAccount) => {
+        // wallet class todo
+        // window.localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
+        wallet.changeAccount(currentAccount)
+        const didUpdate: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
+        if (didUpdate.name === currentAccount.name) {
             toast({
                 description: "Account switched"
             });
 
             router.push('/dashboard');
-            if(pathName.includes('dashboard')){
+            if (pathName.includes('dashboard')) {
                 window.location.reload();
             }
         } else {
@@ -44,29 +45,35 @@ export const SideBar = () => {
     }
 
     const renderAccounts = () => {
-        return account_wallets.flatMap((phraseAccounts, phraseIdx) =>
-            Object.entries(phraseAccounts).flatMap(([accountName, accounts]) =>
-                accounts.map((account, idx) => {
-                    const str = accountName.split(' ');
-                    let new_str = '';
-                    if (str.length >= 2) {
-                        new_str = str[0][0] + str[1][0];
-                    } else {
-                        new_str = str[0][0];
-                    }
-                    return (
-                        <Button
-                            key={`${phraseIdx}-${accountName}-${idx}`}
-                            className="h-[50px] w-[50px] rounded-full flex items-center justify-center"
-                            variant={"secondary"}
-                            onClick={() => handleClick(accountName)}
-                        >
-                            <span>{new_str.toUpperCase()}</span>
-                        </Button>
-                    );
-                })
-            )
-        );
+
+        return Object.entries(account_wallets).map((account, idx) => {
+            const phrase = account[0];
+            return Object.entries(account[1]).map((acc_name, idx) => {
+                const name = acc_name[0];
+                const currentAccount: currentAccount = {
+                    phrase,
+                    name,
+                    idx
+                }
+                const str = name.split(' ');
+                let new_str = '';
+                if (str.length >= 2) {
+                    new_str = str[0][0] + str[1][0];
+                } else {
+                    new_str = str[0][0];
+                }
+                return (
+                    <Button
+                        key={`${phrase}-${name}-${idx}`}
+                        className="h-[50px] w-[50px] rounded-full flex items-center justify-center"
+                        variant={"secondary"}
+                        onClick={() => handleClick(currentAccount)}
+                    >
+                        <span>{new_str.toUpperCase()}</span>
+                    </Button>
+                );
+            })
+        })
     }
 
     return (

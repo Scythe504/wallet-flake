@@ -10,9 +10,17 @@ import { HDNodeWallet } from 'ethers';
 export type Accounts = {
     label: Blockchain,
     path: string,
-    publicKey: string,
-    privateKey: string,
+    publicKey: string | Array<number>,
+    privateKey: Array<number> | string,
 }
+
+export interface currentAccount {
+    phrase: string,
+    name: string,
+    idx: number
+}
+
+type storageObject = { [phrase: string]: { [account_name: string]: Accounts[] } }
 
 export type wallet_map = Map<string, { [name: string]: Accounts[] }>
 
@@ -52,8 +60,8 @@ export class WalletManager {
         const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
 
         const publicKey = Keypair.fromSecretKey(secret).publicKey.toBase58();
-        const privKey = encodeBase58(secret);
-        return [publicKey, privKey];
+
+        return [publicKey, Array.from(secret)];
     }
 
     private deriveEth(index: number, phrase: string) {
@@ -125,7 +133,13 @@ export class WalletManager {
             const ret_val = {
                 [name]: newAccount
             }
-            window.localStorage.setItem('currentAccount', name);
+
+            const currentAccount: currentAccount = {
+                phrase: phrase,
+                name: name,
+                idx: values_len++
+            }
+            window.localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
             return ret_val;
         } catch (e) {
             console.error("Error adding wallet:", e);
@@ -134,48 +148,25 @@ export class WalletManager {
     }
 
     public getWallet(): Accounts[] | undefined {
-        const currentAccount = window.localStorage.getItem('currentAccount');
-        if (!currentAccount) {
-            console.error('No current account found in session storage');
-            return undefined;
-        }
+        const currentAccount: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
+        const { phrase, name, idx } = currentAccount;
+        const storageObject: storageObject = JSON.parse(window.localStorage.getItem('0')!);
 
-        const currentPhrase = window.localStorage.getItem('currentPhrase');
-        if (!currentPhrase) {
-            console.error('No current phrase found in session storage');
-            return undefined;
-        }
-
-        const storageData = window.localStorage.getItem('0');
-        if (!storageData) {
-            console.error('No data found in local storage');
-            return undefined;
-        }
-
-        const data: { [phrase: string]: { [accountName: string]: Accounts[] } } = JSON.parse(storageData);
-
-        const phraseData = data[currentPhrase];
-        if (!phraseData) {
-            console.error('Current phrase not found in stored data');
-            return undefined;
-        }
-
-        const wallets = phraseData[currentAccount];
-        if (!wallets) {
-            console.error('Current account not found in stored data for the current phrase');
-            return undefined;
-        }
+        const wallets: Accounts[] = storageObject[phrase][name];
         return wallets;
     }
 
-    public getPhraseValues() {
+    public getStorage() {
         const phrases: { [phrase: string]: { [account_name: string]: Accounts[] } } = JSON.parse(window.localStorage.getItem('0')!);
-        const account_keys = [];
-        for (let phrase in phrases) {
-            let account = phrases[phrase];
-            account_keys.push(account);
-        }
+        return phrases;
+    }
 
-        return account_keys;
+    public changeAccount({ phrase, name, idx }: currentAccount) {
+        const currentAccount = {
+            phrase,
+            name,
+            idx
+        }
+        window.localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
     }
 }

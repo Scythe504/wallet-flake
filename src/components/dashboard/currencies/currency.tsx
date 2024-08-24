@@ -69,7 +69,7 @@ export const Currencies: React.FC = () => {
                     if (!valid) {
                         throw new Error("Invalid Solana Public Key");
                     }
-                    const { url } = solanaBlockchainConfig.RpcConnectionUrls.MAINNET;
+                    const url = "http://127.0.0.1:8899";
                     const conn = new Connection(url);
                     const balance = await conn.getBalance(new PublicKey(publicAddress));
                     const solBalance = (balance / LAMPORTS_PER_SOL).toFixed(9);
@@ -148,7 +148,7 @@ export const Currencies: React.FC = () => {
     useEffect(() => {
         currentAccount?.forEach((account, idx) => {
             if (currencies[idx]) {
-                currencies[idx].fetchBalance(account.publicKey);
+                currencies[idx].fetchBalance(account.publicKey as string);
             }
         });
     }, [currentAccount]);

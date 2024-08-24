@@ -20,7 +20,7 @@ export const Receive = () => {
         const wallet = WalletManager.getInstance(password);
         const account = wallet.getWallet() as Accounts[];
         setCurrentAccount([...account]);
-        setTimeout(() => setIsLoading(!isLoading), 2000)
+        setIsLoading(!isLoading)
     }, [])
 
     const currencies = [
@@ -47,7 +47,8 @@ export const Receive = () => {
         <div className="flex flex-col gap-4 sm:min-w-[600px]">
             {currentAccount.map((acc, idx) => {
                 const original_text = acc.publicKey;
-                const text_len = original_text.length
+                const text_len = original_text.length;
+                if(typeof original_text !== "string") return ;
                 const vis_text = original_text.startsWith("0x") ? original_text.substring(0, 6) + "..." + original_text.substring(text_len - 4, text_len) : original_text.substring(0, 4) + "..." + original_text.substring(text_len - 4, text_len);
                 return (isLoading ? <CurrencySkeleton /> : <Button
                     variant={"outline"}

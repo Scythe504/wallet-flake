@@ -4,6 +4,7 @@ import { LucideCopy } from "lucide-react"
 import { useEffect, useState } from "react"
 import { SideBarMask } from "../side-bar/side-bar-mask"
 import styled from "styled-components"
+import { currentAccount } from "@/utils/wallet"
 
 interface AnimatedProps {
   isVisible: boolean;
@@ -40,8 +41,8 @@ export const HoverAccount = () => {
     const [currentAccount, setCurrentAccount] = useState('');
 
     useEffect(() => {
-        const curr = window.localStorage.getItem('currentAccount');
-        setCurrentAccount(curr || '');
+        const curr: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
+        setCurrentAccount(curr.name || '');
     }, [])
 
     return (
@@ -53,7 +54,7 @@ export const HoverAccount = () => {
                 <SideBarMask vis={isVisible} />
             </AnimatedSidebar>
             <AnimatedBackdrop isVisible={isVisible} />
-            <div className="flex flex-row items-center sm:gap-2 gap-0 mr-2 sm:mr-6">
+            <div className="flex flex-row items-center sm:gap-2 gap-1 mr-2 sm:mr-6">
                 <p>{currentAccount}</p>
                 <LucideCopy
                     strokeOpacity={60 / 100}
