@@ -1,5 +1,6 @@
 import { getAddress} from "ethers";
 import { EthereumConnectionUrl } from "./connection-url";
+import { EthereumExplorer } from "./explorer";
 
 export const ethereumBlockchainConfig = {
     caip2Id: "eip155:1", // caip-2 "namespace:reference"
@@ -66,11 +67,11 @@ export const ethereumBlockchainConfig = {
       },
     ],
   
-    // PreferencesDefault: {
-    //   explorer: EthereumExplorer.DEFAULT,
-    //   connectionUrl: EthereumConnectionUrl.DEFAULT,
-    //   chainId: "0x1",
-    // },
+    PreferencesDefault: {
+      explorer: EthereumExplorer.DEFAULT,
+      connectionUrl: EthereumConnectionUrl.DEFAULT,
+      chainId: "0x1",
+    },
     validatePublicKey: (address: string) => {
       try {
         getAddress(address);

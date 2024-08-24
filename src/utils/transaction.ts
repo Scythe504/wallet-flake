@@ -30,6 +30,11 @@ export class Transact {
             })
             const toPublicKey = new PublicKey(toPubkey);
             
+            const airdropSignature = await connection.requestAirdrop(
+                fromKeypair.publicKey,
+                amount * LAMPORTS_PER_SOL,
+            );
+
             const transfer_transaction = new Transaction().add(
                 SystemProgram.transfer({
                     fromPubkey: fromKeypair.publicKey,

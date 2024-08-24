@@ -77,7 +77,7 @@ export const Swap = () => {
                         }
                         }
                     >
-                        <svg fill="none" viewBox="0 0 24 24" width="20px" height="20px" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke="#999999" stroke-linecap="round" stroke-linejoin="round" d="m14 15 4 4m0 0 4-4m-4 4V8a4 4 0 0 0-4-4m-4 5L6 5m0 0L2 9m4-4v11a4 4 0 0 0 4 4"></path></svg>
+                        <svg fill="none" viewBox="0 0 24 24" strokeWidth="20px" height="20px" stroke-linecap="round" stroke-linejoin="round" width="2"><path stroke="#999999" stroke-linecap="round" stroke-linejoin="round" d="m14 15 4 4m0 0 4-4m-4 4V8a4 4 0 0 0-4-4m-4 5L6 5m0 0L2 9m4-4v11a4 4 0 0 0 4 4"></path></svg>
                     </Button>
                 </div>
             </div>
@@ -85,7 +85,7 @@ export const Swap = () => {
             <Button
                 className="rounded-full h-[60px] w-[60px] z-40 relative"
             >
-                <svg fill="none" viewBox="0 0 24 24" width="30px" height="30px" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke="#3B3C40" stroke-linecap="round" stroke-linejoin="round" d="m14 15 4 4m0 0 4-4m-4 4V8a4 4 0 0 0-4-4m-4 5L6 5m0 0L2 9m4-4v11a4 4 0 0 0 4 4"></path></svg>
+                <svg fill="none" viewBox="0 0 24 24" strokeWidth="30px" height="30px" stroke-linecap="round" stroke-linejoin="round" width="2"><path stroke="#3B3C40" stroke-linecap="round" stroke-linejoin="round" d="m14 15 4 4m0 0 4-4m-4 4V8a4 4 0 0 0-4-4m-4 5L6 5m0 0L2 9m4-4v11a4 4 0 0 0 4 4"></path></svg>
             </Button>
             {/*  BREAKPOINT */}
             <div className="-translate-y-4

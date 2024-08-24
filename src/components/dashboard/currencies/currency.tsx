@@ -69,7 +69,11 @@ export const Currencies: React.FC = () => {
                     if (!valid) {
                         throw new Error("Invalid Solana Public Key");
                     }
-                    const url = "http://127.0.0.1:8899";
+
+                    let url = solanaBlockchainConfig.RpcConnectionUrls.DEVNET.url;
+                    if (process.env.NODE_ENV === "development") {
+                        "http://127.0.0.1:8899"
+                    }
                     const conn = new Connection(url);
                     const balance = await conn.getBalance(new PublicKey(publicAddress));
                     const solBalance = (balance / LAMPORTS_PER_SOL).toFixed(9);
@@ -96,7 +100,7 @@ export const Currencies: React.FC = () => {
                     if (!valid) {
                         throw new Error("Invalid Ethereum Public Key");
                     }
-                    const { url } = ethereumBlockchainConfig.RpcConnectionUrls.MAINNET;
+                    const { url } = ethereumBlockchainConfig.RpcConnectionUrls.SEPOLIA;
                     const provider = new JsonRpcProvider(url);
                     const ethBalance = await provider.getBalance(publicAddress);
                     const formattedBalance = formatEther(ethBalance);
