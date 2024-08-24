@@ -46,14 +46,14 @@ export const HoverAccount = () => {
 
     return (
         <div 
-            className="text-lg mt-1 font-semibold"
+            className="sm:text-lg text-sm mt-1 font-semibold"
             onClick={() => setIsVisible(!isVisible)}
         >
             <AnimatedSidebar isVisible={isVisible} className=" z-[9999]">
                 <SideBarMask vis={isVisible} />
             </AnimatedSidebar>
             <AnimatedBackdrop isVisible={isVisible} />
-            <div className="flex flex-row items-center gap-2 mr-6">
+            <div className="flex flex-row items-center sm:gap-2 gap-0 mr-2 sm:mr-6">
                 <p>{currentAccount}</p>
                 <LucideCopy
                     strokeOpacity={60 / 100}

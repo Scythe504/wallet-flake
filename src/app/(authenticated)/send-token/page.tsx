@@ -1,6 +1,6 @@
 'use client'
 import { HoverAccount } from "@/components/dashboard/account-wallets/hover-wallet";
-import {OnboardingNavbar} from "@/components/onboarding/navbar/navbar";
+import { OnboardingNavbar } from "@/components/onboarding/navbar/navbar";
 import { SendToken } from "@/components/sendtoken/sendtoken";
 import { useSearchParams } from "next/navigation";
 
@@ -10,10 +10,11 @@ export default function Token() {
     return <div>
         <OnboardingNavbar
             enableSidebar={true}
-            children={<HoverAccount/>}
-        />
+        >
+            <HoverAccount />
+        </OnboardingNavbar>
         <div className="pt-32">
-            <SendToken/>
+            <SendToken />
         </div>
     </div>
 }
