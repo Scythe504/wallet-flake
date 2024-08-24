@@ -8,6 +8,7 @@ import { Accounts, WalletManager } from "@/utils/wallet";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { CurrencySkeleton } from "./skeleton";
+import { useRouter } from "next/navigation";
 
 
 interface BalanceState {
@@ -38,6 +39,7 @@ interface Currency {
 
 
 export const Currencies: React.FC = () => {
+    const router = useRouter();
     const [balances, setBalances] = useState<BalanceState>({
         SOL: null,
         ETH: null,
@@ -164,6 +166,7 @@ export const Currencies: React.FC = () => {
                             className="dark:bg-zinc-900/65 bg-zinc-300/65
                                 flex flex-row justify-between h-[110px] px-4 rounded-xl
                             "
+                            onClick={() => router.push(`/send-token?c=${account.label}`)}
                         >
                             <div className="flex flex-row items-center justify-center gap-2">
                                 <div className="bg-black h-[75px] w-[75px] rounded-full flex justify-center">

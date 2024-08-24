@@ -1,14 +1,16 @@
+'use client'
 import { WalletManager } from "@/utils/wallet"
 import { LucideArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
 import React from "react";
-import { SideBarMask } from "./side-bar-mask";
 import { useToast } from "@/components/ui/use-toast";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export const SideBar = () => {
     const router = useRouter();
     const { toast } = useToast();
+    const pathName = usePathname();
     const password = window.localStorage.getItem('currentPassword');
     if (!password) {
         router.push('/onboarding/1')
@@ -27,12 +29,18 @@ export const SideBar = () => {
         if (didUpdate === currentAccount) {
             toast({
                 description: "Account switched"
-            })
+            });
+
+            router.push('/dashboard');
+            if(pathName.includes('dashboard')){
+                window.location.reload();
+            }
         } else {
             toast({
                 description: "Please Try Again"
             })
         }
+
     }
 
     const renderAccounts = () => {
@@ -50,7 +58,7 @@ export const SideBar = () => {
                         <Button
                             key={`${phraseIdx}-${accountName}-${idx}`}
                             className="h-[50px] w-[50px] rounded-full flex items-center justify-center"
-                            variant="default"
+                            variant={"secondary"}
                             onClick={() => handleClick(accountName)}
                         >
                             <span>{new_str.toUpperCase()}</span>
@@ -62,12 +70,12 @@ export const SideBar = () => {
     }
 
     return (
-        <div className="absolute left-1">
-            (
-            <div className="flex flex-col items-center p-3">
-                {renderAccounts()}
-            </div>
-            )
+        <div className="w-[80px] rounded-xl flex items-start justify-center h-full">
+            <ScrollArea className="h-full">
+                <div className="flex flex-col items-start justify-center gap-2 h-full text-black">
+                    {renderAccounts()}
+                </div>
+            </ScrollArea>
         </div>
     );
 }

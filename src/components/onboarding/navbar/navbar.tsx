@@ -15,18 +15,12 @@ export const OnboardingNavbar = ({
     enableSidebar: boolean
 }) => {
     const { theme } = useTheme();
-    const [visible, setVisible] = useState(false);
-    const toggle = () => {
 
-    }
-
-    return <nav className="sm:p-6 sticky top-0 left-0 right-0 z-10 shadow-xl shadow-zinc-800/30 w-full sm:px-20 px-8 p-6 h-24">
+    return <nav className="sm:p-6 fixed top-0 left-0 right-0 z-10 shadow-xl shadow-zinc-800/30 w-full sm:px-20 px-8 p-6 h-24">
         <div className="flex flex-row justify-between items-center">
             <div className="font-semibold sm:text-3xl text-xl">
                 <div className="flex gap-1 items-center">
-                    <div
-                        onClick={toggle}
-                    >
+                    <div>
                         <Image src={(
                             theme === "dark" ||
                             theme === undefined ||
@@ -37,7 +31,9 @@ export const OnboardingNavbar = ({
                     <p>Flake</p>
                 </div>
             </div>
+            <div className="sm:mr-12">
                 {children}
+            </div>
             <ModeToggle />
         </div>
     </nav>
