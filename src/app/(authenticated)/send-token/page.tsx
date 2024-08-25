@@ -2,9 +2,10 @@
 import { HoverAccount } from "@/components/dashboard/account-wallets/hover-wallet";
 import { OnboardingNavbar } from "@/components/onboarding/navbar/navbar";
 import { SendToken } from "@/components/sendtoken/sendtoken";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Token() {
+    const router = useRouter()
     const searchParam = useSearchParams();
     const val = searchParam.get('c')
     return <div>
@@ -14,7 +15,11 @@ export default function Token() {
             <HoverAccount />
         </OnboardingNavbar>
         <div className="pt-32">
-            <SendToken />
+            <SendToken title={"Send"}
+                handleClose={() => {
+                    router.push('/dashboard')
+                }}
+            />
         </div>
     </div>
 }

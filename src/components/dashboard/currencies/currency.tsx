@@ -10,6 +10,7 @@ import Image from "next/image";
 import { CurrencySkeleton } from "./skeleton";
 import { useRouter } from "next/navigation";
 import { toast, useToast } from "@/components/ui/use-toast";
+import { BlockchainManager } from "@/utils/transaction";
 
 
 interface BalanceState {
@@ -47,6 +48,8 @@ export const Currencies: React.FC = () => {
         ETH: null,
         POLYGON: null,
     });
+    const [solUsdBalance, setSolBalance] = useState("0.00");
+    const [ethUsdBalance, setEthUsdBalance] = useState("0.00");
     const [isLoading, setIsLoading] = useState<LoadingState>({
         SOL: false,
         ETH: false,
@@ -57,6 +60,7 @@ export const Currencies: React.FC = () => {
         ETH: null,
         POLYGON: null
     });
+    const transaction = new BlockchainManager();
 
     const currencies: Currency[] = [
         {
@@ -78,8 +82,21 @@ export const Currencies: React.FC = () => {
                     }
                     const conn = new Connection(url);
                     const balance = await conn.getBalance(new PublicKey(publicAddress));
-                    const solBalance = (balance / LAMPORTS_PER_SOL).toFixed(9);
-                    setBalances(prev => ({ ...prev, SOL: solBalance[0] }));
+                    const sol_to_usd = await transaction.getSolPrice();
+                    try {
+                        if (sol_to_usd === null) {
+                            toast({
+                                description: "Rate Limitted"
+                            })
+                            setSolBalance("0.00" as string);
+                            throw new Error("Rate Limitted");
+                        }
+                    } catch (error) {
+                        console.error({ error })
+                        setSolBalance(sol_to_usd as string);
+                    }
+                    const solBalance = (balance / LAMPORTS_PER_SOL).toFixed(2);
+                    setBalances(prev => ({ ...prev, SOL: solBalance }));
                     return solBalance;
                 } catch (error) {
                     console.error({ error });
@@ -107,6 +124,8 @@ export const Currencies: React.FC = () => {
                     const ethBalance = await provider.getBalance(publicAddress);
                     const formattedBalance = formatEther(ethBalance);
                     setBalances(prev => ({ ...prev, ETH: formattedBalance }));
+                    // const eth_usd = await transaction.getUsdcValueFromWei();
+                    // setEthUsdBalance(eth_usd!);
                     return formattedBalance;
                 } catch (error) {
                     console.error({ error });
@@ -144,6 +163,7 @@ export const Currencies: React.FC = () => {
             },
         },
     ];
+
     const [currentAccount, setCurrentAccount] = useState<Accounts[]>();
     useEffect(() => {
         const password = window.localStorage.getItem('password');
@@ -175,7 +195,7 @@ export const Currencies: React.FC = () => {
                             onClick={() => {
                                 if (account.label !== "SOL") {
                                     toast({
-                                        description: "Currently Only Solana can be used to transfer SOL"
+                                        description: "Currently Only Solana can be used to transfer"
                                     })
                                 }
                                 router.push(`/send-token?c=SOL`)
@@ -192,12 +212,11 @@ export const Currencies: React.FC = () => {
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <h1 className="font-semibold text-xl">{currencies[idx].name}</h1>
-                                    <p className="text-lg font-medium text-zinc-900/65 dark:text-zinc-300/65">{balances[label]} {label}</p>
+                                    <p className="text-lg font-medium text-zinc-900/65 dark:text-zinc-300/65">{balances[label]} {label}...</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-center">
-                                <h1 className="font-semibold text-xl">$0.00</h1>
-                                <p className="text-lg font-medium text-zinc-900/65 dark:text-zinc-300/65">$0.00</p>
+                                <h1 className="font-semibold text-xl">{label === "SOL" ? "$" + solUsdBalance : "$" + ethUsdBalance}</h1>
                             </div>
                         </Button>
                     }

@@ -5,23 +5,26 @@ import { Input } from "../ui/input";
 import { LucideArrowLeft, LucideArrowUpDown } from "lucide-react";
 import { TokenFooter } from "./sendtoken-footer";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Transact } from "@/utils/transaction";
+import { BlockchainManager } from "@/utils/transaction";
 import { useToast } from "../ui/use-toast";
-import { Textarea } from "../ui/textarea";
 
-export const SendToken = () => {
+export const SendToken = ({ title, handleClose }: {
+    title: string,
+    handleClose: () => void,
+}) => {
     const { toast } = useToast();
+    const pahtName = usePathname();
     const router = useRouter();
     const solanaLogo = logoUris.SOL;
     const [amount, setAmount] = useState<number>(0);
     const [toPublicKey, setPublicKey] = useState<string>("");
     const [disabled, setIsDisabled] = useState(false);
 
-    const handleClick = () => {
+    const handleNext = () => {
         setIsDisabled(!disabled);
-        const transaction = new Transact();
+        const transaction = new BlockchainManager();
         transaction.sendSol(amount, toPublicKey)
             .then((data) => {
                 if (data) {
@@ -39,15 +42,6 @@ export const SendToken = () => {
             })
     }
 
-    const Footer = <TokenFooter
-        disabled={disabled}
-        handleClick={handleClick}
-    />
-
-    useEffect(()=> {
-
-    },[])
-
     return <div className="w-full px-4 sm:px-20">
         <div className="flex flex-col items-center justify-center gap-4">
             <div className="w-full flex justify-between pb-6">
@@ -58,7 +52,7 @@ export const SendToken = () => {
                 >
                     <LucideArrowLeft />
                 </Button>
-                <h1 className="text-4xl font-semibold self-center">Send SOL</h1>
+                <h1 className="text-4xl font-semibold self-center">{title} SOL</h1>
                 <div className="w-[calc(40px)]"></div>
             </div>
             <div className="flex items-center justify-center">
@@ -71,11 +65,14 @@ export const SendToken = () => {
                     />
                 </div>
             </div>
-            <Input
-                className="p-4 py-8 text-xl"
-                placeholder="Receipients Address"
-                onChange={e => setPublicKey(e.target.value)}
-            />
+            {
+                pahtName.includes("/send-token") &&
+                <Input
+                    className="p-4 py-8 text-xl"
+                    placeholder="Receipients Address"
+                    onChange={e => setPublicKey(e.target.value)}
+                />
+            }
             <Input
                 className="p-4 py-8 text-xl"
                 placeholder="Amount"
@@ -95,7 +92,8 @@ export const SendToken = () => {
         </div>
         <TokenFooter
             disabled={disabled}
-            handleClick={handleClick}
+            handleNext={handleNext}
+            handleClose={handleClose}
         />
     </div>
 }

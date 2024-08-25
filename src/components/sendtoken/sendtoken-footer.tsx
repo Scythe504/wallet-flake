@@ -1,9 +1,10 @@
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
 
-export const TokenFooter = ({disabled, handleClick}: {
+export const TokenFooter = ({ disabled, handleNext, handleClose }: {
     disabled: boolean,
-    handleClick : ()=> void
+    handleNext: () => void,
+    handleClose: () => void,
 }) => {
     const router = useRouter();
 
@@ -11,7 +12,7 @@ export const TokenFooter = ({disabled, handleClick}: {
         <Button
             variant={"secondary"}
             className="w-full h-[55px] text-lg font-semibold"
-            onClick={()=> router.push('/dashboard')}
+            onClick={handleClose}
             disabled={disabled}
         >
             Close
@@ -20,7 +21,7 @@ export const TokenFooter = ({disabled, handleClick}: {
             variant={"secondary"}
             className="w-full h-[55px] opacity-95 text-lg font-semibold dark:bg-zinc-800/65 bg-zinc-300/65 text-opacity-90"
             disabled={disabled}
-            onClick={handleClick}
+            onClick={handleNext}
         >
             Next
         </Button>

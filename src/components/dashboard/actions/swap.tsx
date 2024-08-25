@@ -3,11 +3,12 @@ import { logoUris } from "@/blockchains-config/logos"
 import { solanaBlockchainConfig } from "@/blockchains-config/solana/config"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { BlockchainManager } from "@/utils/transaction"
 import { LucideGitCompareArrows } from "lucide-react"
 import Image from "next/image"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
-type currency = "SOL" | "ETH" | "USDC";
+type currency = "SOL" | "USDC";
 type to = "USDC" | currency;
 
 interface exchange {
@@ -18,11 +19,29 @@ interface exchange {
 
 export const Swap = () => {
     const [currentCurrency, setCurrentCurrency] = useState<exchange>({
-        value: "0",
         from: "SOL",
         to: "USDC"
     });
-    const [isLoading, setIsLoading] = useState();
+    const [fromCurrency, setFrom] = useState("0");
+    const [isLoading, setIsLoading] = useState(false);
+    const [convertedVal, setConvertedVal] = useState("0");
+    const blockchain = new BlockchainManager();
+    useEffect(() => {
+        handleSwitch();
+    }, [fromCurrency])
+
+    const handleSwitch = async () => {
+        setFrom("0");
+        setConvertedVal("0")
+        setIsLoading(!isLoading);
+        const usdc = await blockchain.getCurrentSolUsdcPrice();
+        if (currentCurrency.from === "SOL") {
+            setConvertedVal((parseFloat(fromCurrency) * usdc!).toFixed(2));
+        }
+        if (currentCurrency.from === "USDC") {
+            setConvertedVal((parseFloat(fromCurrency) / parseFloat(usdc!.toFixed(2))).toFixed(2))
+        }
+    }
 
     return <div className="flex flex-col gap-8 px-4 items-center sm:-translate-y-12">
         <h1 className="text-5xl font-semibold text-center">Swap</h1>
@@ -45,6 +64,7 @@ export const Swap = () => {
                     "
                         type="number"
                         placeholder="0"
+                        onChange={e => setFrom(e.target.value)}
                     />
                     <div className="bg-zinc-800/65 flex flex-row items-center justify-center p-1 min-w-[120px] gap-2 px-2 rounded-xl">
                         <div className="h-[40px] w-[40px] bg-black rounded-full flex items-center justify-center">
@@ -64,28 +84,22 @@ export const Swap = () => {
                     <div>
                         {currentCurrency.value} {currentCurrency.to}
                     </div>
-                    <Button
-                        variant={"ghost"}
-                        className="rounded-full"
-                        onClick={() => {
-                            const temp = currentCurrency.from
-                            setCurrentCurrency({
-                                value: "0",
-                                from: currentCurrency.to,
-                                to: temp,
-                            })
-                        }
-                        }
-                    >
-                        <svg fill="none" viewBox="0 0 24 24" strokeWidth="20px" height="20px" stroke-linecap="round" stroke-linejoin="round" width="2"><path stroke="#999999" stroke-linecap="round" stroke-linejoin="round" d="m14 15 4 4m0 0 4-4m-4 4V8a4 4 0 0 0-4-4m-4 5L6 5m0 0L2 9m4-4v11a4 4 0 0 0 4 4"></path></svg>
-                    </Button>
                 </div>
             </div>
             {/* BREAKPOINT  */}
             <Button
                 className="rounded-full h-[60px] w-[60px] z-40 relative"
+                onClick={() => {
+                    const temp = currentCurrency.from
+                    setCurrentCurrency({
+                        value: "0",
+                        from: currentCurrency.to,
+                        to: temp,
+                    })
+                }
+                }
             >
-                <svg fill="none" viewBox="0 0 24 24" strokeWidth="30px" height="30px" stroke-linecap="round" stroke-linejoin="round" width="2"><path stroke="#3B3C40" stroke-linecap="round" stroke-linejoin="round" d="m14 15 4 4m0 0 4-4m-4 4V8a4 4 0 0 0-4-4m-4 5L6 5m0 0L2 9m4-4v11a4 4 0 0 0 4 4"></path></svg>
+                <svg fill="none" viewBox="0 0 24 24" width="24px" height="24px" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke="#3B3C40" stroke-linecap="round" stroke-linejoin="round" d="m14 15 4 4m0 0 4-4m-4 4V8a4 4 0 0 0-4-4m-4 5L6 5m0 0L2 9m4-4v11a4 4 0 0 0 4 4"></path></svg>
             </Button>
             {/*  BREAKPOINT */}
             <div className="-translate-y-4
@@ -105,6 +119,8 @@ export const Swap = () => {
                     "
                         type="number"
                         placeholder="0"
+                        disabled={true}
+                        value={convertedVal}
                     />
                     <div className="bg-zinc-800/65 flex flex-row items-center justify-center p-1 min-w-[120px] gap-2 px-2 rounded-xl">
                         <div className="h-[40px] w-[40px] bg-black rounded-full flex items-center justify-center">
