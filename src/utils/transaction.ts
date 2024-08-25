@@ -116,7 +116,9 @@ export class BlockchainManager {
 
         try {
             const publicKey = new PublicKey(account[0].publicKey);
-            const url = "http://127.0.0.1:8899"
+            let url = solanaBlockchainConfig.RpcConnectionUrls.DEVNET.url;
+            if(process.env.NODE_ENV === "development") url = "http://127.0.0.1:8899";
+            
             const solConnection = new Connection(url);
 
             const accountInfo = await solConnection.getAccountInfo(publicKey);

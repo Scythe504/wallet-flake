@@ -13,16 +13,15 @@ export const Balance = () => {
     const fetchBalance = async () => {
         try {
             const sol_usd_balance = await blockchain.getSolPrice();
-            // const eth_usd_balance = await blockchain.getUsdcValueFromWei();
-            if(sol_usd_balance === null){
+            if (sol_usd_balance !== null) {
                 const parsedSum = parseFloat(sol_usd_balance!).toFixed(2);
                 setSumBalance(parsedSum)
             } else {
                 throw new Error("Rate Limitted")
             }
-        
+
         } catch (error) {
-            console.error({error})
+            console.error({ error })
             toast({
                 description: "Rate Limitted",
             });

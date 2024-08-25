@@ -20,7 +20,7 @@ export interface currentAccount {
     idx: number
 }
 
-type storageObject = { [phrase: string]: { [account_name: string]: Accounts[] } }
+export type storageObject = { [phrase: string]: { [account_name: string]: Accounts[] } }
 
 export type wallet_map = Map<string, { [name: string]: Accounts[] }>
 
@@ -36,17 +36,17 @@ export class WalletManager {
     public walletMap: wallet_map;
     public wallet_counts: number;
 
-    private constructor(password: string) {
+    private constructor() {
         this.walletMap = new Map<string, { [name: string]: Accounts[] }>();
         this.wallet_counts = 0;
     }
 
-    static getInstance(password: string) {
+    static getInstance() {
         if (WalletManager.instance) {
             return WalletManager.instance;
         }
 
-        WalletManager.instance = new WalletManager(password);
+        WalletManager.instance = new WalletManager();
         return WalletManager.instance;
     }
 

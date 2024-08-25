@@ -44,9 +44,9 @@ export const Currencies: React.FC = () => {
     const { toast } = useToast();
     const router = useRouter();
     const [balances, setBalances] = useState<BalanceState>({
-        SOL: null,
-        ETH: null,
-        POLYGON: null,
+        SOL: "0.00",
+        ETH: "0.00",
+        POLYGON: "0.00",
     });
     const [solUsdBalance, setSolBalance] = useState("0.00");
     const [ethUsdBalance, setEthUsdBalance] = useState("0.00");
@@ -91,9 +91,9 @@ export const Currencies: React.FC = () => {
                             setSolBalance("0.00" as string);
                             throw new Error("Rate Limitted");
                         }
+                        setSolBalance(sol_to_usd as string);
                     } catch (error) {
                         console.error({ error })
-                        setSolBalance(sol_to_usd as string);
                     }
                     const solBalance = (balance / LAMPORTS_PER_SOL).toFixed(2);
                     setBalances(prev => ({ ...prev, SOL: solBalance }));
@@ -166,8 +166,7 @@ export const Currencies: React.FC = () => {
 
     const [currentAccount, setCurrentAccount] = useState<Accounts[]>();
     useEffect(() => {
-        const password = window.localStorage.getItem('password');
-        const wallet = WalletManager.getInstance(password!);
+        const wallet = WalletManager.getInstance();
         setCurrentAccount(wallet.getWallet() as Accounts[]);
     }, [])
 
