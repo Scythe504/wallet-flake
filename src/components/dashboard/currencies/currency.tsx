@@ -197,7 +197,7 @@ export const Currencies: React.FC = () => {
                                         description: "Currently Only Solana can be used to transfer"
                                     })
                                 }
-                                router.push(`/send-token?c=SOL`)
+                                router.push(`/send-token`)
                             }}
                         >
                             <div className="flex flex-row items-center justify-center gap-2">

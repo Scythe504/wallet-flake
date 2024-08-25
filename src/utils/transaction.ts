@@ -13,8 +13,7 @@ export class BlockchainManager {
     }
     public async sendEth(amount: number, toPubKey: string) {
         const { API_KEY } = process.env;
-        const password = window.localStorage.getItem('currentPassword');
-        const wallet = WalletManager.getInstance(password!);
+        const wallet = WalletManager.getInstance();
         const ethObj = wallet.getWallet();
 
         const settings = {
@@ -61,8 +60,7 @@ export class BlockchainManager {
         if (process.env.NODE_ENV === "development") {
             url = "http://127.0.0.1:8899";
         }
-        const password = window.localStorage.getItem('currentPassword');
-        const wallet = WalletManager.getInstance(password!);
+        const wallet = WalletManager.getInstance();
         const solanaObj = wallet.getWallet();
         try {
             if (solanaObj === undefined) {
@@ -109,16 +107,15 @@ export class BlockchainManager {
     }
 
     public async getSolPrice() {
-        const password = window.localStorage.getItem('password');
 
-        const wallet = WalletManager.getInstance(password!);
+        const wallet = WalletManager.getInstance();
         const account: Accounts[] = wallet.getWallet()!;
 
         try {
             const publicKey = new PublicKey(account[0].publicKey);
             let url = solanaBlockchainConfig.RpcConnectionUrls.DEVNET.url;
-            if(process.env.NODE_ENV === "development") url = "http://127.0.0.1:8899";
-            
+            if (process.env.NODE_ENV === "development") url = "http://127.0.0.1:8899";
+
             const solConnection = new Connection(url);
 
             const accountInfo = await solConnection.getAccountInfo(publicKey);
@@ -144,8 +141,8 @@ export class BlockchainManager {
         let { url } = solanaBlockchainConfig.RpcConnectionUrls.DEVNET;
         if (process.env.NODE_ENV === "development") {
             url = "http://127.0.0.1:8899";
-        } const password = window.localStorage.getItem('currentPassword');
-        const wallet = WalletManager.getInstance(password!);
+        }
+        const wallet = WalletManager.getInstance();
         const solanaObj = wallet.getWallet();
         try {
             if (solanaObj === undefined) {

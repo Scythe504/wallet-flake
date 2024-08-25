@@ -23,7 +23,7 @@ export const SideBar = () => {
         return <></>;
     }
     
-    const wallet = WalletManager.getInstance(password);
+    const wallet = WalletManager.getInstance();
     const account_wallets = wallet.getStorage();
     
     if (!account_wallets) {
@@ -68,7 +68,7 @@ export const SideBar = () => {
                     new_str = str[0][0];
                 }
                 
-                const wallet = WalletManager.getInstance(password);
+                const wallet = WalletManager.getInstance();
                 const accounts: Accounts[] = account_wallets[phrase][acc_name[0]]
 
                 return (

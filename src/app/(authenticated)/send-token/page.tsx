@@ -4,10 +4,8 @@ import { OnboardingNavbar } from "@/components/onboarding/navbar/navbar";
 import { SendToken } from "@/components/sendtoken/sendtoken";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Token() {
+export default function _Token() {
     const router = useRouter()
-    const searchParam = useSearchParams();
-    const val = searchParam.get('c')
     return <div>
         <OnboardingNavbar
             enableSidebar={true}
@@ -15,7 +13,8 @@ export default function Token() {
             <HoverAccount />
         </OnboardingNavbar>
         <div className="pt-32">
-            <SendToken title={"Send"}
+            <SendToken
+                title={"Send"}
                 handleClose={() => {
                     router.push('/dashboard')
                 }}

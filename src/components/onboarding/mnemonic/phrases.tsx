@@ -13,8 +13,7 @@ export const Phrases = () => {
     useEffect(() => {
         setMnemonic(generateMnemonic());
     }, [])
-    // const [seed, setSeed] = useState<Buffer>();
-    // setSeed(mnemonicToSeedSync(mnemonic));
+   
     window.localStorage.setItem('currentPhrase', mnemonic);
     const copyToClipboard = () => {
         navigator.clipboard.writeText(mnemonic);

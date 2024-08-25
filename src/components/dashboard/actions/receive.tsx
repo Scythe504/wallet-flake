@@ -16,8 +16,7 @@ export const Receive = () => {
     const { toast } = useToast();
 
     useEffect(() => {
-        const password = window.localStorage.getItem('currentPassword') as string;
-        const wallet = WalletManager.getInstance(password);
+        const wallet = WalletManager.getInstance();
         const account = wallet.getWallet() as Accounts[];
         setCurrentAccount([...account]);
         setIsLoading(!isLoading)

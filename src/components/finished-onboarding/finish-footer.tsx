@@ -19,11 +19,11 @@ export const FinishedFooter = () => {
                 
                 if (!password || !phrase) {
                     setMessage("Failed");
-                    // router.push('/onboarding/1')
+                    router.push('/onboarding/1')
                     return;
                 }
 
-                const wallet = WalletManager.getInstance(password);
+                const wallet = WalletManager.getInstance();
                 const added = wallet.addWallet(`Account ${Number(wallet.wallet_counts / 3)}`, phrase);
 
                 if (added) {
@@ -32,10 +32,7 @@ export const FinishedFooter = () => {
 
                     setImportedWallets([...accounts]);
                     setMessage("Finished");
-                    // accounts.forEach((account: Accounts) => {
-                    //     console.log(`Label: ${account.label}`);
-                    //     console.log(`Public Key: ${account.publicKey}`);
-                    // });
+                    
                 } else {
                     setMessage("Failed");
                 }
