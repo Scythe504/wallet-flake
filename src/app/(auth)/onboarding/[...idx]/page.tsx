@@ -40,7 +40,7 @@ export default function Onboarding() {
     }, [currentStep]);
     
     return (
-        <div className="p-5 min-h-screen flex flex-col items-center justify-center">
+        <div className="py-8 min-h-screen translate-y-4 flex flex-col items-center justify-center">
             {/* Render different components based on currentStep */}
             {currentStep === 1 && <CreatePassword    />}
             {currentStep === 2 && <Mnemonics />}
