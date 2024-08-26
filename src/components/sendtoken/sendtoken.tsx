@@ -11,6 +11,7 @@ import { useToast } from "../ui/use-toast";
 import solana from '../../../public/solana.svg'
 import eth from '../../../public/ethereum.svg'
 import matic from '../../../public/matic.svg'
+import { WalletManager } from "@/utils/wallet";
 
 
 export const SendToken = ({ title, handleClose }: {
@@ -18,6 +19,7 @@ export const SendToken = ({ title, handleClose }: {
     handleClose: () => void,
 }) => {
     const { toast } = useToast();
+    const wallet = new BlockchainManager();
     const pahtName = usePathname();
     const router = useRouter();
     const logoUris = {
@@ -108,11 +110,8 @@ export const SendToken = ({ title, handleClose }: {
             />
             <div className="flex flex-row items-center justify-between w-full px-4">
                 <div className="text-zinc-900/65 dark:text-zinc-300/65 flex gap-2 text-lg items-center">
-                    <p>0.00 USD</p>
-                    <LucideArrowUpDown size={20} />
                 </div>
                 <div className="text-zinc-900/65 dark:text-zinc-300/65 text-lg">
-                    Available 0 SOL
                 </div>
             </div>
         </div>
