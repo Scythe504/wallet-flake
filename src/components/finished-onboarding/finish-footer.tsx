@@ -24,7 +24,7 @@ export const FinishedFooter = () => {
                 }
 
                 const wallet = WalletManager.getInstance();
-                const added = wallet.addWallet(`Account ${Number(wallet.wallet_counts / 3)}`, phrase);
+                const added = wallet.addWallet(`Account ${Number(wallet.wallet_counts/3 + 1)}`, phrase);
 
                 if (added) {
                     const accountName = Object.keys(added)[0];

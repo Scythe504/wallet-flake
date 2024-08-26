@@ -9,9 +9,12 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { CurrencySkeleton } from "./skeleton";
 import { useRouter } from "next/navigation";
-import { toast, useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { BlockchainManager } from "@/utils/transaction";
-
+import solana from '../../../../public/solana.svg'
+import eth from '../../../../public/ethereum.svg'
+import matic from '../../../../public/matic.svg'
+import { logoUris } from "@/blockchains-config/logos";
 
 interface BalanceState {
     SOL: string | null;
@@ -66,7 +69,7 @@ export const Currencies: React.FC = () => {
         {
             gasToken: solanaBlockchainConfig.GasTokenName,
             name: solanaBlockchainConfig.Name,
-            logoUri: solanaBlockchainConfig.localLogoUri,
+            logoUri: solana,
             fetchBalance: async (publicAddress: string): Promise<string | null> => {
                 setIsLoading(prev => ({ ...prev, SOL: true }));
                 setError(prev => ({ ...prev, SOL: null }));
@@ -110,7 +113,7 @@ export const Currencies: React.FC = () => {
         {
             gasToken: ethereumBlockchainConfig.GasTokenName,
             name: ethereumBlockchainConfig.Name,
-            logoUri: ethereumBlockchainConfig.localLogoUri,
+            logoUri: eth,
             fetchBalance: async (publicAddress: string): Promise<string | null> => {
                 setIsLoading(prev => ({ ...prev, ETH: true }));
                 setError(prev => ({ ...prev, ETH: null }));
@@ -138,7 +141,7 @@ export const Currencies: React.FC = () => {
         }, {
             gasToken: ethereumBlockchainConfig.GasTokenName,
             name: "POLYGON",
-            logoUri: './matic.svg',
+            logoUri: matic,
             fetchBalance: async (publicAddress: string): Promise<string | null> => {
                 setIsLoading(prev => ({ ...prev, POLYGON: true }));
                 setError(prev => ({ ...prev, POLYGON: null }));
@@ -164,26 +167,26 @@ export const Currencies: React.FC = () => {
         },
     ];
 
-    const [currentAccount, setCurrentAccount] = useState<Accounts[]>();
+    const [currentcurrency, setCurrentcurrency] = useState<Accounts[]>();
     useEffect(() => {
         const wallet = WalletManager.getInstance();
-        setCurrentAccount(wallet.getWallet() as Accounts[]);
+        setCurrentcurrency(wallet.getWallet() as Accounts[]);
     }, [])
 
     useEffect(() => {
-        currentAccount?.forEach((account, idx) => {
+        currentcurrency?.forEach((currency, idx) => {
             if (currencies[idx]) {
-                currencies[idx].fetchBalance(account.publicKey as string);
+                currencies[idx].fetchBalance(currency.publicKey as string);
             }
         });
-    }, [currentAccount]);
+    }, [currentcurrency]);
 
     return (
         <div className="px-6 sm:px-20 w-full sm:items-center sm:flex sm:justify-center">
             <div className="flex flex-col gap-4 sm:min-w-[600px]">
                 {
-                    currentAccount?.map((account, idx) => {
-                        const label: "SOL" | "ETH" | "POLYGON" = account.label as "SOL" | "ETH" | "POLYGON";
+                    currencies?.map((currency, idx) => {
+                        const gasToken = currency.gasToken;
                         const loading = isLoading.POLYGON;
                         return loading === true ? <CurrencySkeleton /> : <Button
                             variant={"outline"}
@@ -192,7 +195,7 @@ export const Currencies: React.FC = () => {
                                 flex flex-row justify-between h-[110px] px-4 rounded-xl
                             "
                             onClick={() => {
-                                if (account.label !== "SOL") {
+                                if (currency.gasToken !== "SOL") {
                                     toast({
                                         description: "Currently Only Solana can be used to transfer"
                                     })
@@ -203,19 +206,19 @@ export const Currencies: React.FC = () => {
                             <div className="flex flex-row items-center justify-center gap-2">
                                 <div className="bg-black h-[75px] w-[75px] rounded-full flex justify-center">
                                     <Image
-                                        src={currencies[idx].logoUri}
+                                        src={currency.gasToken === "SOL" ? logoUris.SOL : currency.gasToken === "ETH" ? logoUris.ETH : logoUris.MATIC}
                                         alt="logo"
                                         height={35}
                                         width={35}
                                     />
                                 </div>
                                 <div className="flex flex-col items-start">
-                                    <h1 className="font-semibold text-xl">{currencies[idx].name}</h1>
-                                    <p className="text-lg font-medium text-zinc-900/65 dark:text-zinc-300/65">{balances[label]} {label}...</p>
+                                    <h1 className="font-semibold text-xl">{currency.gasToken === "SOL" ? "Solana" : currency.gasToken === "ETH" ? "Ethereum" : "Polygon"}</h1>
+                                    <p className="text-lg font-medium text-zinc-900/65 dark:text-zinc-300/65">{balances[gasToken as "SOL" | "ETH" | "POLYGON"]} {gasToken}...</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-center">
-                                <h1 className="font-semibold text-xl">{label === "SOL" ? "$" + solUsdBalance : "$" + ethUsdBalance}</h1>
+                                <h1 className="font-semibold text-xl">{gasToken === "SOL" ? "$" + solUsdBalance : "$" + ethUsdBalance}</h1>
                             </div>
                         </Button>
                     }

@@ -1,5 +1,4 @@
 'use client'
-import { logoUris } from "@/blockchains-config/logos"
 import { solanaBlockchainConfig } from "@/blockchains-config/solana/config"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -7,6 +6,9 @@ import { BlockchainManager } from "@/utils/transaction"
 import { LucideGitCompareArrows } from "lucide-react"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
+import solana from '../../../../public/solana.svg'
+import usdc from '../../../../public/usdc.svg'
+
 
 type currency = "SOL" | "USDC";
 type to = "USDC" | currency;
@@ -22,6 +24,10 @@ export const Swap = () => {
         from: "SOL",
         to: "USDC"
     });
+    const logoUris = {
+        "SOL": solana,
+        "USDC" : usdc,
+    }
     const [fromCurrency, setFrom] = useState("0");
     const [isLoading, setIsLoading] = useState(false);
     const [convertedVal, setConvertedVal] = useState("0");

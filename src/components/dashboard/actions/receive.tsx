@@ -9,6 +9,7 @@ import { ethereumBlockchainConfig } from "@/blockchains-config/eth/config";
 import { solanaBlockchainConfig } from "@/blockchains-config/solana/config";
 import { Copy, CopyCheck } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { logoUris } from "@/blockchains-config/logos";
 
 export const Receive = () => {
     const [currentAccount, setCurrentAccount] = useState<Accounts[]>([]);
@@ -26,17 +27,17 @@ export const Receive = () => {
         {
             gasToken: solanaBlockchainConfig.GasTokenName,
             name: solanaBlockchainConfig.Name,
-            logoUri: solanaBlockchainConfig.localLogoUri,
+            logoUri: logoUris.SOL,
 
         },
         {
             gasToken: ethereumBlockchainConfig.GasTokenName,
             name: ethereumBlockchainConfig.Name,
-            logoUri: ethereumBlockchainConfig.localLogoUri,
+            logoUri: logoUris.ETH,
         }, {
             gasToken: ethereumBlockchainConfig.GasTokenName,
             name: "POLYGON",
-            logoUri: './matic.svg',
+            logoUri: logoUris.MATIC,
         },
     ];
 

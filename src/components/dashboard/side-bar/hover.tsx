@@ -1,11 +1,18 @@
-import { logoUris } from "@/blockchains-config/logos"
 import { Accounts } from "@/utils/wallet"
 import { Copy } from "lucide-react"
 import Image from "next/image"
+import solana from '../../../../public/solana.svg'
+import eth from '../../../../public/ethereum.svg'
+import matic from '../../../../public/matic.svg'
 
 export const HoverRevealCard = ({ accounts }: {
     accounts: Accounts[]
 }) => {
+    const logoUris = {
+        "SOL": solana,
+        "ETH": eth,
+        "MATIC": matic
+    }
 
     return <div className="p-1 min-w-fit">
         <div className="flex flex-col gap-2 w-full">
@@ -24,7 +31,7 @@ export const HoverRevealCard = ({ accounts }: {
 
                 return <div key={idx} className="flex flex-row justify-between w-full gap-2">
                     <span className="flex flex-row items-center">
-                        <div className="flex items-center h-[30px] w-[30px] bg-black rounded-full"> 
+                        <div className="flex items-center h-[30px] w-[30px] bg-black rounded-full">
                             <Image
                                 src={logo}
                                 height={15}
@@ -35,7 +42,7 @@ export const HoverRevealCard = ({ accounts }: {
                         <p className="text-sm">{acc.label}</p>
                     </span>
                     <span className="hover:text-purple-400 flex flex-row text-sm items-center justify-end gap-1"
-                        onClick={()=> navigator.clipboard.writeText(acc.publicKey as string)}
+                        onClick={() => navigator.clipboard.writeText(acc.publicKey as string)}
                     >
                         <p className="dark:text-zinc-300/65 text-zinc-900/65">{vis_text}</p>
                         <Copy

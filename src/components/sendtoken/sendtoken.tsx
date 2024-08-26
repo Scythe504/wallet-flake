@@ -1,14 +1,17 @@
 'use client'
-import { logoUris } from "@/blockchains-config/logos"
 import Image from "next/image"
 import { Input } from "../ui/input";
 import { LucideArrowLeft, LucideArrowUpDown } from "lucide-react";
 import { TokenFooter } from "./sendtoken-footer";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BlockchainManager } from "@/utils/transaction";
 import { useToast } from "../ui/use-toast";
+import solana from '../../../public/solana.svg'
+import eth from '../../../public/ethereum.svg'
+import matic from '../../../public/matic.svg'
+
 
 export const SendToken = ({ title, handleClose }: {
     title: string,
@@ -17,6 +20,11 @@ export const SendToken = ({ title, handleClose }: {
     const { toast } = useToast();
     const pahtName = usePathname();
     const router = useRouter();
+    const logoUris = {
+        "SOL": solana,
+        "ETH": eth,
+        "MATIC": matic
+    }
     const solanaLogo = logoUris.SOL;
     const [amount, setAmount] = useState<number>(0);
     const [toPublicKey, setPublicKey] = useState<string>("");
@@ -25,21 +33,39 @@ export const SendToken = ({ title, handleClose }: {
     const handleNext = () => {
         setIsDisabled(!disabled);
         const transaction = new BlockchainManager();
-        transaction.sendSol(amount, toPublicKey)
-            .then((data) => {
-                if (data) {
+        if (pahtName.includes("send-token")) {
+            transaction.sendSol(amount, toPublicKey)
+                .then((data) => {
+                    if (data) {
+                        toast({
+                            description: data?.message
+                        })
+                    }
+                    setIsDisabled(!disabled);
+                }).catch(err => {
+                    console.error(err)
                     toast({
-                        description: data?.message
+                        description: "Some Error Occured"
+                    })
+                    setIsDisabled(!disabled);
+                })
+        } else {
+            transaction.airdropSol(amount).then((data)=>{
+                if(data.error) {
+                    throw new Error(data.error);
+                }
+                if(data.success) {
+                    toast({
+                        description : data.success
                     })
                 }
-                setIsDisabled(!disabled);
-            }).catch(err => {
-                console.error(err)
+            }).catch((err) => {
+                console.error({err});
                 toast({
-                    description: "Some Error Occured"
+                    description : "Airdrop Failed or Rate Limitted"
                 })
-                setIsDisabled(!disabled);
             })
+        }
     }
 
     return <div className="w-full px-4 sm:px-20">
@@ -47,7 +73,7 @@ export const SendToken = ({ title, handleClose }: {
             <div className="w-full flex justify-between pb-6">
                 <Button
                     variant={"ghost"}
-                    onClick={() => router.back()}
+                    onClick={() => pahtName.includes("send") ? router.back() : window.location.reload()}
                     className=""
                 >
                     <LucideArrowLeft />
