@@ -42,7 +42,7 @@ export const Receive = () => {
     ];
 
     return <div className="px-6 sm:px-20
-    w-full pt-8 flex flex-col gap-8">
+    w-full flex flex-col gap-8">
         <h1 className="text-5xl font-semibold text-center">Receive</h1>
         <div className="flex flex-col gap-4 sm:min-w-[600px]">
             {currentAccount.map((acc, idx) => {

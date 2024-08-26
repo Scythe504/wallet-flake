@@ -89,7 +89,7 @@ export const Currencies: React.FC = () => {
                     try {
                         if (sol_to_usd === null) {
                             toast({
-                                description: "Rate Limitted"
+                                description: "No Balance or Rate Limitted"
                             })
                             setSolBalance("0.00" as string);
                             throw new Error("Rate Limitted");

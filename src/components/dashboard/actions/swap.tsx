@@ -49,12 +49,12 @@ export const Swap = () => {
         }
     }
 
-    return <div className="flex flex-col gap-8 px-4 items-center sm:-translate-y-12">
+    return <div className="flex flex-col gap-4 px-4 items-center sm:-translate-y-16">
         <h1 className="text-5xl font-semibold text-center">Swap</h1>
         <div className="flex flex-col items-center justify-start max-h-[500px] tran">
             <div className="
             translate-y-4
-            w-full dark:bg-zinc-900/65 h-[240px]
+            w-full dark:bg-zinc-900/65 h-[200px]
             rounded-xl p-8 dark:text-zinc-300/65 text-zinc-900/65
             flex flex-col gap-4
             ">
@@ -86,11 +86,6 @@ export const Swap = () => {
                         </p>
                     </div>
                 </div>
-                <div className="flex flex-row items-center justify-start">
-                    <div>
-                        {currentCurrency.value} {currentCurrency.to}
-                    </div>
-                </div>
             </div>
             {/* BREAKPOINT  */}
             <Button
@@ -109,7 +104,7 @@ export const Swap = () => {
             </Button>
             {/*  BREAKPOINT */}
             <div className="-translate-y-4
-            w-full dark:bg-zinc-900/65 h-[240px]
+            w-full dark:bg-zinc-900/65 h-[200px]
             rounded-xl p-8 dark:text-zinc-300/65 text-zinc-900/65
             flex flex-col gap-4
             ">
@@ -142,11 +137,7 @@ export const Swap = () => {
                         </p>
                     </div>
                 </div>
-                <div className="flex flex-row items-center justify-start">
-                    <div>
-                        {currentCurrency.value} {currentCurrency.to}
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>

@@ -155,7 +155,7 @@ export class WalletManager {
             console.log({enc});
             
             try {
-                window.localStorage.setItem('currentAccount', enc);
+                window.localStorage.setItem('currentAccount',enc);
             } catch (error) {
                 console.error("Error storing currentAccount:", error);
             }

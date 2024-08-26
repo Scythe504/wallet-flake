@@ -7,11 +7,9 @@ import axios from 'axios';
 import { ethers, JsonRpcProvider } from "ethers";
 
 
-
 export class BlockchainManager {
 
     constructor() {
-        
     }
     public async sendEth(amount: number, toPubKey: string) {
         const { API_KEY } = process.env;
@@ -157,21 +155,19 @@ export class BlockchainManager {
                 publicKey: Keypair.fromSecretKey(new Uint8Array(privateKey as number[])).publicKey.toBytes(),
                 secretKey: new Uint8Array(privateKey as number[]) as Uint8Array
             })
-            console.log({ fromKeypair })
+
             const airdropSignature = await connection.requestAirdrop(
                 fromKeypair.publicKey,
                 amount * LAMPORTS_PER_SOL,
             );
 
             const latestBlockHash = await connection.getLatestBlockhash();
-            console.log({ latestBlockHash })
 
             const result = await connection.confirmTransaction({
                 blockhash: latestBlockHash.blockhash,
                 lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
                 signature: airdropSignature,
             });
-            console.log({ result })
             if (result.value.err) {
                 throw new Error("Airdrop Failed, SOL not received")
             }

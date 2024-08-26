@@ -11,7 +11,7 @@ export default function Dashb() {
                     <HoverAccount />
                 </OnboardingNavbar>
             </div>
-            <div className="flex-grow overflow-y-auto pt-20">
+            <div className="flex-grow overflow-y-auto pt-20 max-h-[calc(100%)]">
                 <Dashboard />
             </div>
         </div>
