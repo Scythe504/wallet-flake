@@ -139,7 +139,7 @@ export const Currencies: React.FC = () => {
                 }
             },
         }, {
-            gasToken: ethereumBlockchainConfig.GasTokenName,
+            gasToken: "MATIC    ",
             name: "POLYGON",
             logoUri: matic,
             fetchBalance: async (publicAddress: string): Promise<string | null> => {
@@ -214,7 +214,7 @@ export const Currencies: React.FC = () => {
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <h1 className="font-semibold text-xl">{currency.gasToken === "SOL" ? "Solana" : currency.gasToken === "ETH" ? "Ethereum" : "Polygon"}</h1>
-                                    <p className="text-lg font-medium text-zinc-900/65 dark:text-zinc-300/65">{balances[gasToken as "SOL" | "ETH" | "POLYGON"]} {gasToken}...</p>
+                                    <p className="text-lg font-medium text-zinc-900/65 dark:text-zinc-300/65">{balances[gasToken as "SOL" | "ETH" | "POLYGON"] || "0.00"} {gasToken}...</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-center justify-center">

@@ -60,7 +60,7 @@ export const PhraseInput = () => {
             window.localStorage.setItem('currentPhrase', phrase.join(' '));
             if(pathName.includes("add")) {
                 const wallet = WalletManager.getInstance();
-                wallet.addWallet(`Account ${wallet.wallet_counts}`,phrase.join(' '));
+                wallet.addWallet(`Account ${wallet.wallet_counts + 1}`,phrase.join(' '));
                 router.push("/dashboard");
             } else{
                 router.push(`/importing/${3}`)
