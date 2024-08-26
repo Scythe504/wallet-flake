@@ -23,7 +23,7 @@ export const Balance = () => {
         } catch (error) {
             console.error({ error })
             toast({
-                description: "Rate Limitted",
+                description: "Some error occurred while fetching balances",
             });
             setSumBalance("0.00");
         }

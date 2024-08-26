@@ -4,7 +4,7 @@ import { Currencies } from "./currencies/currency"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 
 export const Dashboard = () => {
-    return <div className="w-full h-full space-y-8 pb-12">
+    return <div className="w-full h-full space-y-8 flex flex-col">
         <Balance/>
         <GroupedActions />
         <ScrollArea>

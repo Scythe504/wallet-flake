@@ -6,10 +6,11 @@ import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { HoverRevealCard } from "./hover";
+import bs58 from 'bs58'
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
 } from "@/components/ui/hover-card"
 
 export const SideBar = () => {
@@ -17,15 +18,15 @@ export const SideBar = () => {
     const { toast } = useToast();
     const pathName = usePathname();
     const password = window.localStorage.getItem('currentPassword');
-    
+
     if (!password) {
         router.push('/onboarding/1')
         return <></>;
     }
-    
+
     const wallet = WalletManager.getInstance();
     const account_wallets = wallet.getStorage();
-    
+
     if (!account_wallets) {
         router.push('/onboarding/1')
         return <></>
@@ -33,16 +34,18 @@ export const SideBar = () => {
 
     const handleClick = (currentAccount: currentAccount) => {
         wallet.changeAccount(currentAccount)
-        const didUpdate: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
-        if (didUpdate.name === currentAccount.name) {
+        const didUpdate = window.localStorage.getItem('currentAccount')!;
+        const temp = new TextEncoder().encode(JSON.stringify(currentAccount));
+        const tobase58 = bs58.encode(temp);
+        if (didUpdate === tobase58) {
             toast({
                 description: "Account switched"
             });
-            
-            router.push('/dashboard');
+
             if (pathName.includes('dashboard')) {
                 window.location.reload();
             }
+            router.push('/dashboard');
         } else {
             toast({
                 description: "Please Try Again"
@@ -67,7 +70,7 @@ export const SideBar = () => {
                 } else {
                     new_str = str[0][0];
                 }
-                
+
                 const wallet = WalletManager.getInstance();
                 const accounts: Accounts[] = account_wallets[phrase][acc_name[0]]
 

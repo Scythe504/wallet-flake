@@ -3,9 +3,10 @@ import { Keypair } from '@solana/web3.js';
 import { mnemonicToSeedSync } from 'bip39';
 import { derivePath } from 'ed25519-hd-key';
 import nacl from 'tweetnacl';
-import { encodeBase58 } from 'ethers';
 import { ethereumBlockchainConfig } from '@/blockchains-config/eth/config';
 import { HDNodeWallet } from 'ethers';
+import { useRouter } from 'next/navigation';
+import bs58 from 'bs58'
 
 export type Accounts = {
     label: Blockchain,
@@ -69,23 +70,31 @@ export class WalletManager {
         return [hdNode.address, hdNode.privateKey];
     }
     public addWallet(name: string, phrase: string): { [name: string]: Accounts[] } | null {
+        if (typeof window === 'undefined') {
+            console.warn("addWallet called in a non-browser environment");
+            return null;
+        }
+    
         try {
             // Retrieve existing data from localStorage
-            let existingData: { [phrase: string]: { [name: string]: Accounts[] } };
+            let existingData: { [phrase: string]: { [name: string]: Accounts[] } } = {};
             try {
                 const storedData = window.localStorage.getItem('0');
-                existingData = storedData ? JSON.parse(storedData) : {};
+                if (storedData !== null) {
+                    const decoded = bs58.decode(storedData);
+                    existingData = JSON.parse(Buffer.from(decoded).toString('utf8'));
+                }
             } catch (parseError) {
                 console.warn("Failed to parse localStorage, using empty object:", parseError);
-                existingData = {};
             }
+    
             // Initialize wallet data for this phrase if it doesn't exist
             if (!existingData[phrase]) {
                 existingData[phrase] = {};
             }
-
+    
             let values_len = Object.keys(existingData[phrase]).length || 0;
-
+    
             const newAccount = [
                 {
                     label: Blockchain.SOL,
@@ -106,40 +115,51 @@ export class WalletManager {
                     privateKey: this.deriveEth(values_len, phrase)[1],
                 },
             ];
-
+    
             // Add new account to existing data
             if (!existingData[phrase][name]) {
                 existingData[phrase][name] = [];
             }
             existingData[phrase][name].push(...newAccount);
-
+    
             // Update wallet_counts
             this.wallet_counts += 3;
-
+    
             // Convert back to JSON and store in localStorage
             const updatedDataJson = JSON.stringify(existingData);
-
-            window.localStorage.setItem('0', updatedDataJson);
-
+            const byte_arr = new TextEncoder().encode(updatedDataJson);
+            const encoded = bs58.encode(byte_arr);
+    
+            window.localStorage.setItem('0', encoded);
+    
             const storedData = window.localStorage.getItem('0');
-
-            if (storedData !== updatedDataJson) {
+            if (storedData !== encoded) {
                 console.warn("Stored data doesn't match what we tried to store!");
             }
-
+    
             // Update the instance walletMap
             this.walletMap = new Map(Object.entries(existingData));
-
+    
             const ret_val = {
                 [name]: newAccount
-            }
-
+            };
+    
             const currentAccount: currentAccount = {
                 phrase: phrase,
                 name: name,
                 idx: values_len++
+            };
+    
+            const encoded_currentAccount = new TextEncoder().encode(JSON.stringify(currentAccount));
+            const enc = bs58.encode(encoded_currentAccount);
+            console.log({enc});
+            
+            try {
+                window.localStorage.setItem('currentAccount', enc);
+            } catch (error) {
+                console.error("Error storing currentAccount:", error);
             }
-            window.localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
+    
             return ret_val;
         } catch (e) {
             console.error("Error adding wallet:", e);
@@ -148,16 +168,23 @@ export class WalletManager {
     }
 
     public getWallet(): Accounts[] | undefined {
-        const currentAccount: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
+        const storedAccount = window.localStorage.getItem('currentAccount');
+        const decoded = bs58.decode(storedAccount as string);
+        const currentAccount: currentAccount = JSON.parse(Buffer.from(decoded).toString('utf8'));
         const { phrase, name } = currentAccount;
-        const storageObject: storageObject = JSON.parse(window.localStorage.getItem('0')!);
+        const storageString = window.localStorage.getItem('0');
+        const decode = bs58.decode(storageString!);
+        const decodedObject: storageObject = JSON.parse(Buffer.from(decode).toString('utf8'));
 
-        const wallets: Accounts[] = storageObject[phrase][name];
+        const wallets: Accounts[] = decodedObject[phrase][name];
         return wallets;
     }
 
     public getStorage() {
-        const phrases: { [phrase: string]: { [account_name: string]: Accounts[] } } = JSON.parse(window.localStorage.getItem('0')!);
+        const storedPhrase = window.localStorage.getItem('0');
+        const decoded = bs58.decode(storedPhrase!)
+        const phrases: storageObject = JSON.parse(Buffer.from(decoded).toString('utf8'))
+
         return phrases;
     }
 
@@ -167,6 +194,8 @@ export class WalletManager {
             name,
             idx
         }
-        window.localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
+        const encoded = new TextEncoder().encode(JSON.stringify(currentAccount));
+        const toBase58 = bs58.encode(encoded);
+        window.localStorage.setItem('currentAccount', toBase58);
     }
 }

@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Receive } from "../actions/receive"
 import { Send } from "../actions/send"
 import { Swap } from "../actions/swap"
-import { DollarSign, LucideArrowRightLeft, LucidePlus, LucideSend, SendIcon, X } from "lucide-react"
+import { DollarSign, LucideArrowRightLeft, LucidePlus, LucideSend } from "lucide-react"
 import { SendToken } from '@/components/sendtoken/sendtoken'
-import { TokenFooter } from '@/components/sendtoken/sendtoken-footer'
 
 interface action {
     label: string,
@@ -85,7 +84,7 @@ export const GroupedActions = () => {
                         animate={{ y: 0 }}
                         exit={{ y: "100%" }}
                         transition={{ type: "spring", damping: 30, stiffness: 500 }}
-                        className="fixed left-0 right-0 bottom-0 bg-white dark:bg-black z-50 overflow-y-auto"
+                        className="fixed left-0 right-0 bottom-4 bg-white dark:bg-black z-50 overflow-y-auto md:px-20"
                         style={{
                             top: `${navbarHeight}px`,
                             height: `calc(100% - ${navbarHeight}px)`

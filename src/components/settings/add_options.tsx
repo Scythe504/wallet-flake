@@ -1,7 +1,6 @@
 'use client'
 import { storageObject, WalletManager } from "@/utils/wallet";
 import React, { useEffect, useState } from "react"
-import { AddWallet } from "./add_account";
 import { Input } from "../ui/input";
 import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";

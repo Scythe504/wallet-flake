@@ -1,5 +1,5 @@
 'use client'
-
+import bs58 from 'bs58'
 import { LucideCopy } from "lucide-react"
 import { useEffect, useState } from "react"
 import { SideBarMask } from "../side-bar/side-bar-mask"
@@ -41,8 +41,15 @@ export const HoverAccount = () => {
     const [currentAccount, setCurrentAccount] = useState<currentAccount>();
 
     useEffect(() => {
-        const curr: currentAccount = JSON.parse(window.localStorage.getItem('currentAccount')!);
-        setCurrentAccount(curr);
+        const wallet = WalletManager.getInstance()
+        let curr: string | Accounts[] | null = window.localStorage.getItem('currentAccount');
+        if(curr === null) {
+            curr = JSON.stringify(wallet.getWallet() as Accounts[])
+        }
+        const decode = bs58.decode(curr);
+        const current: currentAccount = JSON.parse(Buffer.from(decode).toString('utf8'));
+
+        setCurrentAccount(current);
     }, [])
 
     return (

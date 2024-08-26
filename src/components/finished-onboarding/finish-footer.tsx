@@ -48,6 +48,7 @@ export const FinishedFooter = () => {
     const router = useRouter()
 
     const handleFinish = () => {
+        window.localStorage.removeItem('currentPhrase')
         router.push('/dashboard')
     }
 
