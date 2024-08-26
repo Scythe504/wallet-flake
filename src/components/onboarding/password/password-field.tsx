@@ -44,7 +44,7 @@ export const PasswordField = () => {
             <MnemonicFooter
                 Content={<span className="gap-1 flex">
                     I agree to the
-                    <a className="text-blue-500" href="/terms">
+                    <a className="text-blue-500">
                         Terms and Services
                     </a>
                 </span>}
